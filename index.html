@@ -29,7 +29,7 @@
         header {
             background-color: var(--primary-color);
             color: white;
-            padding: 1.5rem;
+            padding: 1rem;
             box-shadow: 0 4px 6px var(--shadow-color);
             position: fixed;
             width: 100%;
@@ -52,9 +52,9 @@
         }
 
         .logo {
-            width: 50px;
-            height: 50px;
-            margin-right: 1rem;
+            width: 40px;
+            height: 40px;
+            margin-right: 0.5rem;
             border-radius: 50%;
             background-color: white;
             padding: 5px;
@@ -67,24 +67,40 @@
 
         h1 {
             margin: 0;
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 700;
+        }
+
+        nav {
+            position: fixed;
+            top: 60px;
+            left: -100%;
+            width: 100%;
+            height: calc(100% - 60px);
+            background-color: var(--primary-color);
+            transition: left var(--transition-speed) ease;
+            z-index: 999;
+        }
+
+        nav.active {
+            left: 0;
         }
 
         nav ul {
             list-style-type: none;
-            padding: 0;
-            display: flex;
+            padding: 1rem;
+            margin: 0;
         }
 
         nav ul li {
-            margin-left: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         nav ul li a {
             color: white;
             text-decoration: none;
             font-weight: 500;
+            font-size: 1.2rem;
             transition: color var(--transition-speed) ease;
         }
 
@@ -96,7 +112,7 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            padding: 7rem 2rem 2rem;
+            padding: 5rem 1rem 1rem;
             max-width: 1200px;
             margin: 0 auto;
         }
@@ -104,11 +120,10 @@
         .info-box {
             background-color: var(--card-background);
             border-radius: 12px;
-            box-shadow: 0 10px 20px var(--shadow-color);
-            margin: 1rem;
-            padding: 1.5rem;
-            width: calc(25% - 2rem);
-            min-width: 250px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            margin: 0.5rem;
+            padding: 1rem;
+            width: calc(50% - 1rem);
             cursor: pointer;
             transition: all var(--transition-speed) ease;
             display: flex;
@@ -135,19 +150,19 @@
         }
 
         .info-box:hover {
-            transform: translateY(-10px) scale(1.03);
-            box-shadow: 0 15px 30px var(--shadow-color);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 20px var(--shadow-color);
         }
 
         .info-box h3 {
-            margin: 1rem 0 0;
-            font-size: 1.2rem;
+            margin: 0.5rem 0 0;
+            font-size: 1rem;
             font-weight: 600;
             color: var(--primary-color);
         }
 
         .icon {
-            font-size: 2.5rem;
+            font-size: 2rem;
             margin-bottom: 0.5rem;
             color: var(--secondary-color);
             transition: transform var(--transition-speed) ease;
@@ -178,11 +193,11 @@
 
         .modal-content {
             background-color: var(--card-background);
-            margin: 10% auto;
-            padding: 2rem;
+            margin: 20% auto;
+            padding: 1.5rem;
             border-radius: 12px;
             width: 90%;
-            max-width: 500px;
+            max-width: 400px;
             box-shadow: 0 15px 30px var(--shadow-color);
             position: relative;
             transform: scale(0.7);
@@ -200,7 +215,7 @@
             right: 1rem;
             top: 0.5rem;
             color: var(--text-color);
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: bold;
             cursor: pointer;
             transition: color var(--transition-speed) ease;
@@ -214,6 +229,7 @@
         #modal-title {
             margin-top: 0;
             color: var(--primary-color);
+            font-size: 1.2rem;
         }
 
         #modal-link {
@@ -234,29 +250,6 @@
             box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
         }
 
-        @media (max-width: 768px) {
-            .info-box {
-                width: calc(50% - 2rem);
-            }
-
-            nav ul {
-                display: none;
-            }
-
-            .menu-toggle {
-                display: block;
-                font-size: 1.5rem;
-                color: white;
-                cursor: pointer;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .info-box {
-                width: 100%;
-            }
-        }
-
         .search-container {
             position: relative;
             margin-left: auto;
@@ -270,6 +263,8 @@
             background-color: rgba(255, 255, 255, 0.1);
             color: white;
             transition: all var(--transition-speed) ease;
+            width: 100%;
+            max-width: 200px;
         }
 
         .search-input:focus {
@@ -293,7 +288,47 @@
         }
 
         .menu-toggle {
-            display: none;
+            display: block;
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+        }
+
+        @media (min-width: 768px) {
+            .info-box {
+                width: calc(33.33% - 1rem);
+            }
+
+            nav {
+                position: static;
+                width: auto;
+                height: auto;
+                background-color: transparent;
+            }
+
+            nav ul {
+                display: flex;
+                padding: 0;
+            }
+
+            nav ul li {
+                margin-left: 1.5rem;
+                margin-bottom: 0;
+            }
+
+            nav ul li a {
+                font-size: 1rem;
+            }
+
+            .menu-toggle {
+                display: none;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .info-box {
+                width: calc(25% - 1rem);
+            }
         }
     </style>
 </head>
@@ -419,8 +454,7 @@
                 description: "Esplora gli eventi culturali e di intrattenimento a Montesilvano.",
                 link: "https://t.me/eventiculturalipebot"
             },
-            {
-                title: "Offerte e sconti",
+            {   title: "Offerte e sconti",
                 icon: "fas fa-tags",
                 description: "Trova le migliori offerte e sconti nei negozi locali.",
                 link: "https://t.me/volantinimontesilvanobot"
@@ -470,7 +504,7 @@
         const modalLink = document.getElementById('modal-link');
         const closeButton = document.getElementsByClassName('close')[0];
         const menuToggle = document.querySelector('.menu-toggle');
-        const nav = document.querySelector('nav ul');
+        const nav = document.querySelector('nav');
 
         function createInfoBoxes() {
             sections.forEach((section) => {
