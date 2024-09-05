@@ -10,6 +10,8 @@
             --background-color: #f4f4f4;
             --text-color: #333;
             --border-color: #ddd;
+            --button-bg: #007BFF;
+            --button-hover-bg: #0056b3;
         }
         
         .dark-mode {
@@ -17,6 +19,8 @@
             --background-color: #222;
             --text-color: #f4f4f4;
             --border-color: #555;
+            --button-bg: #333;
+            --button-hover-bg: #444;
         }
         
         body {
@@ -26,6 +30,9 @@
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
         }
         
         #sidebar {
@@ -37,7 +44,12 @@
             left: 0;
             height: 100%;
             padding: 20px;
-            transition: margin-left 0.3s;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        
+        #sidebar.hidden {
+            transform: translateX(-100%);
         }
         
         #sidebar h1 {
@@ -59,6 +71,7 @@
             color: #fff;
             text-decoration: none;
             font-size: 18px;
+            display: block;
         }
         
         #sidebar ul li a:hover {
@@ -66,23 +79,28 @@
         }
         
         #sidebar-toggle {
-            position: absolute;
+            position: fixed;
             top: 20px;
-            right: -40px;
+            left: 20px;
             background-color: var(--primary-color);
             color: #fff;
             padding: 10px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 18px;
-            transition: right 0.3s;
+            transition: background-color 0.3s;
+            z-index: 1001;
+        }
+        
+        #sidebar-toggle:hover {
+            background-color: var(--button-hover-bg);
         }
         
         #container {
             margin-left: 250px;
             padding: 20px;
-            width: calc(100% - 270px);
-            transition: margin-left 0.3s;
+            width: calc(100% - 250px);
+            transition: margin-left 0.3s ease;
         }
         
         .container {
@@ -92,6 +110,8 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
+            max-width: 100%;
+            box-sizing: border-box;
         }
         
         .input-group {
@@ -113,16 +133,17 @@
         
         button {
             padding: 10px 20px;
-            background-color: var(--primary-color);
+            background-color: var(--button-bg);
             color: #fff;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            transition: background-color 0.3s;
         }
         
         button:hover {
-            background-color: #0056b3;
+            background-color: var(--button-hover-bg);
         }
         
         .reminder-item {
@@ -157,6 +178,7 @@
             display: flex;
             justify-content: space-around;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
         
         .theme-option, .color-option {
@@ -165,18 +187,50 @@
             border-radius: 50%;
             border: 2px solid transparent;
             cursor: pointer;
-        }
-        
-        .theme-option {
-            border: 2px solid var(--border-color);
-        }
-        
-        .color-option {
-            border: 2px solid var(--border-color);
+            margin: 5px;
         }
         
         .theme-option.selected, .color-option.selected {
             border: 2px solid #000;
+        }
+        
+        @media (max-width: 768px) {
+            #sidebar {
+                width: 200px;
+                padding: 15px;
+            }
+            
+            #container {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            #sidebar.hidden {
+                transform: translateX(-200px);
+            }
+            
+            #sidebar-toggle {
+                left: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                transform: translateY(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            #sidebar.hidden {
+                transform: translateY(0);
+            }
+            
+            #container {
+                margin-left: 0;
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -228,40 +282,29 @@
             <div class="theme-picker">
                 <div class="theme-option" style="background-color: #FFB3B3;" onclick="setTheme('#FFB3B3', '#F9EAE9', '#333')"></div>
                 <div class="theme-option" style="background-color: #B3E0FF;" onclick="setTheme('#B3E0FF', '#E6F0FF', '#333')"></div>
-                <div class="theme-option" style="background-color: #B3FFB3;" onclick="setTheme('#B3FFB3', '#E6F9E6', '#333')"></div>
-                <div class="theme-option" style="background-color: #FFD9B3;" onclick="setTheme('#FFD9B3', '#FDF0E6', '#333')"></div>
+                <div class="theme-option" style="background-color: #B3FFB3;" onclick="setTheme('#B3FFB3', '#E6FFE6', '#333')"></div>
+                <div class="theme-option" style="background-color: #D9D9D9;" onclick="setTheme('#D9D9D9', '#F4F4F4', '#333')"></div>
             </div>
-            <div class="color-picker">
-                <div class="color-option" style="background-color: #FFB3B3;" onclick="setColor('#FFB3B3')"></div>
-                <div class="color-option" style="background-color: #B3E0FF;" onclick="setColor('#B3E0FF')"></div>
-                <div class="color-option" style="background-color: #B3FFB3;" onclick="setColor('#B3FFB3')"></div>
-                <div class="color-option" style="background-color: #FFD9B3;" onclick="setColor('#FFD9B3')"></div>
-            </div>
-            <div class="input-group">
-                <label for="theme-toggle">Tema scuro:</label>
-                <input type="checkbox" id="theme-toggle" onclick="toggleDarkMode()">
-            </div>
+            <button onclick="toggleDarkMode()">Passa a Modalità Scura</button>
         </div>
     </div>
-
     <script>
-        let selectedColor = '#FFFFFF';
-        let selectedTheme = { primary: '#007BFF', background: '#f4f4f4', text: '#333' };
-
+        let selectedColor = '#f4f4f4';
+        
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const container = document.getElementById('container');
-            if (sidebar.style.marginLeft === '0px') {
-                sidebar.style.marginLeft = '-250px';
-                container.style.marginLeft = '0';
-            } else {
-                sidebar.style.marginLeft = '0';
+            if (sidebar.classList.contains('hidden')) {
+                sidebar.classList.remove('hidden');
                 container.style.marginLeft = '250px';
+            } else {
+                sidebar.classList.add('hidden');
+                container.style.marginLeft = '0';
             }
         }
 
         function showSection(sectionId) {
-            const sections = document.querySelectorAll('#container > div');
+            const sections = document.querySelectorAll('#container > .container');
             sections.forEach(section => {
                 section.classList.remove('active');
             });
