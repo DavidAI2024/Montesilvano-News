@@ -3,309 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Promemoria Personalizzabile</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/2.3.1/luxon.min.js"></script>
+    <title>Gestione Promemoria</title>
     <style>
-        :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #f39c12;
-            --background-color: #f4f7f9;
-            --text-color: #333;
-            --sidebar-bg: #333333;
-            --sidebar-text: #ffffff;
-            --highlight-color: #4a90e2;
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
-            padding: 0;
-            display: flex;
-            transition: margin-left 0.3s ease;
+            padding: 20px;
         }
-
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 250px;
-            background-color: var(--sidebar-bg);
-            color: var(--sidebar-text);
-            display: flex;
-            flex-direction: column;
-            transform: translateX(-250px);
-            transition: transform 0.3s ease;
-            z-index: 1000;
-        }
-
-        .sidebar.open {
-            transform: translateX(0);
-        }
-
-        .sidebar-toggle {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background-color: var(--sidebar-bg);
-            color: var(--sidebar-text);
-            border: none;
-            padding: 15px;
-            cursor: pointer;
-            font-size: 24px;
-            z-index: 1001;
-            transition: left 0.3s ease;
-        }
-
-        .sidebar.open + .sidebar-toggle {
-            left: 270px;
-        }
-
-        .menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            flex: 1;
-        }
-
-        .menu li {
-            border-bottom: 1px solid #444;
-        }
-
-        .menu a {
-            display: flex;
-            align-items: center;
-            color: var(--sidebar-text);
-            text-decoration: none;
-            padding: 15px;
-            transition: background-color 0.3s;
-        }
-
-        .menu a:hover {
-            background-color: var(--highlight-color);
-        }
-
-        .menu .icon {
-            margin-right: 10px;
-        }
-
-        .container {
-            margin-left: 0;
-            max-width: 800px;
-            width: 100%;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            transition: margin-left 0.3s ease;
-        }
-
         h1 {
-            color: var(--primary-color);
             text-align: center;
-            margin-bottom: 30px;
         }
-
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
-
         label {
             display: block;
             margin-bottom: 5px;
-            font-weight: bold;
         }
-
         input, select, textarea {
             width: 100%;
             padding: 10px;
+            margin: 5px 0 10px 0;
             border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
+            border-radius: 4px;
         }
-
         button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
             padding: 10px 20px;
-            border-radius: 5px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s;
         }
-
         button:hover {
-            background-color: #357abd;
+            background-color: #0056b3;
         }
-
-        .reminders-list {
-            margin-top: 30px;
-        }
-
         .reminder-item {
-            background-color: #fff;
+            background: #fff;
             border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 15px;
+            padding: 10px;
             margin-bottom: 10px;
+            border-radius: 4px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
         .reminder-item.completed {
             text-decoration: line-through;
-            background-color: #d3ffd3;
+            background: #e0ffe0;
         }
-
-        .reminder-item .icon {
-            font-size: 24px;
-            margin-right: 10px;
+        .reminder-item button {
+            background: #dc3545;
         }
-
-        .reminder-item .delete-btn {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 3px;
-            cursor: pointer;
+        .reminder-item button:hover {
+            background: #c82333;
         }
-
-        .reminder-item .complete-btn {
-            background-color: #2ecc71;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 3px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-
-        .color-picker, .theme-picker {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .color-option, .theme-option {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
         .search-bar {
-            margin-bottom: 20px;
-        }
-
-        .sort-button {
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        .sort-button:hover {
-            background-color: #d07b0c;
-        }
-
-        .settings-container, .add-reminder-container, .view-reminders-container {
-            display: none;
-        }
-
-        .settings-container.active, .add-reminder-container.active, .view-reminders-container.active {
-            display: block;
+            margin-bottom: 15px;
         }
     </style>
 </head>
 <body>
-    <div class="sidebar" id="sidebar">
-        <ul class="menu">
-            <li><a href="#visualizza" onclick="showSection('view-reminders')"><i class="icon">📋</i>Visualizza Promemoria</a></li>
-            <li><a href="#crea" onclick="showSection('add-reminder')"><i class="icon">➕</i>Aggiungi Promemoria</a></li>
-            <li><a href="#impostazioni" onclick="showSection('settings')"><i class="icon">⚙️</i>Impostazioni</a></li>
-        </ul>
-    </div>
-    
-    <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()">
-        <span>&#9776;</span>
-    </button>
-
-    <div class="container" id="container">
-        <h1>📝 Promemoria Personalizzabile</h1>
+    <div class="container">
+        <h1>Gestione Promemoria</h1>
+        <div class="input-group">
+            <label for="reminder-text">Promemoria:</label>
+            <input type="text" id="reminder-text" placeholder="Inserisci il tuo promemoria">
+        </div>
+        <div class="input-group">
+            <label for="reminder-date">Data e Ora:</label>
+            <input type="datetime-local" id="reminder-date">
+        </div>
+        <div class="input-group">
+            <label for="reminder-icon">Icona:</label>
+            <select id="reminder-icon">
+                <option value="📝">📝 Nota</option>
+                <option value="🎉">🎉 Celebrazione</option>
+                <option value="🏋️">🏋️ Esercizio</option>
+                <option value="🍽️">🍽️ Pasto</option>
+                <option value="💼">💼 Lavoro</option>
+                <option value="🎁">🎁 Regalo</option>
+            </select>
+        </div>
+        <button onclick="addReminder()">Aggiungi Promemoria</button>
         
-        <div class="settings-container" id="settings">
-            <h2>Impostazioni</h2>
-            <label for="theme-picker">Tema Pastellato:</label>
-            <div class="theme-picker" id="theme-picker"></div>
+        <div class="search-bar">
+            <input type="text" id="search-reminder" placeholder="Cerca promemoria" onkeyup="filterReminders()">
         </div>
-
-        <div class="add-reminder-container" id="add-reminder">
-            <h2>Aggiungi Promemoria</h2>
-            <div class="input-group">
-                <label for="reminder-text">Promemoria:</label>
-                <input type="text" id="reminder-text" placeholder="Inserisci il tuo promemoria">
-            </div>
-            
-            <div class="input-group">
-                <label for="reminder-date">Data e Ora:</label>
-                <input type="datetime-local" id="reminder-date">
-            </div>
-            
-            <div class="input-group">
-                <label for="reminder-icon">Icona:</label>
-                <select id="reminder-icon">
-                    <option value="📝">📝 Nota</option>
-                    <option value="🎉">🎉 Celebrazione</option>
-                    <option value="🏋️">🏋️ Esercizio</option>
-                    <option value="🍽️">🍽️ Pasto</option>
-                    <option value="💼">💼 Lavoro</option>
-                    <option value="🎁">🎁 Regalo</option>
-                </select>
-            </div>
-            
-            <div class="input-group">
-                <label for="reminder-color">Colore Promemoria:</label>
-                <div class="color-picker" id="color-picker"></div>
-            </div>
-
-            <button onclick="addReminder()">Aggiungi Promemoria</button>
-        </div>
-
-        <div class="view-reminders-container" id="view-reminders">
-            <h2>Visualizza Promemoria</h2>
-            <div class="search-bar">
-                <input type="text" id="search-reminder" placeholder="Cerca promemoria" oninput="searchReminders()">
-                <button class="sort-button" onclick="sortReminders()">Ordina</button>
-            </div>
-            <div class="reminders-list" id="reminders-list"></div>
-        </div>
+        
+        <div id="reminders-list"></div>
     </div>
 
     <script>
-        const { DateTime } = luxon;
-        const reminders = JSON.parse(localStorage.getItem('reminders')) || [];
-        let selectedColor = '#ffffff';
-
-        function showSection(sectionId) {
-            document.querySelector('.settings-container.active')?.classList.remove('active');
-            document.querySelector('.add-reminder-container.active')?.classList.remove('active');
-            document.querySelector('.view-reminders-container.active')?.classList.remove('active');
-            
-            document.getElementById(sectionId).classList.add('active');
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js').then(reg => {
+                console.log('Service Worker registrato con successo:', reg);
+                return reg.pushManager.getSubscription();
+            }).then(subscription => {
+                if (subscription === null) {
+                    console.log('Non sei iscritto alle notifiche.');
+                } else {
+                    console.log('Sei già iscritto alle notifiche:', subscription);
+                }
+            }).catch(error => {
+                console.error('Registrazione del Service Worker fallita:', error);
+            });
         }
 
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-            document.getElementById('sidebar-toggle').classList.toggle('open');
+        const reminders = JSON.parse(localStorage.getItem('reminders')) || [];
+
+        function renderReminders() {
+            const remindersList = document.getElementById('reminders-list');
+            remindersList.innerHTML = '';
+            reminders.forEach(reminder => {
+                const reminderItem = document.createElement('div');
+                reminderItem.className = `reminder-item ${reminder.completed ? 'completed' : ''}`;
+                reminderItem.innerHTML = `
+                    <div class="text">${reminder.icon} ${reminder.text} <span>(${new Date(reminder.date).toLocaleString()})</span></div>
+                    <button onclick="toggleComplete(${reminder.id})">Completa</button>
+                    <button onclick="deleteReminder(${reminder.id})">Elimina</button>
+                `;
+                remindersList.appendChild(reminderItem);
+            });
         }
 
         function addReminder() {
@@ -318,13 +147,11 @@
                 return;
             }
 
-            const reminderDate = DateTime.fromISO(date);
             const reminder = {
                 id: Date.now(),
                 text,
-                date: reminderDate.toISO(),
+                date: new Date(date).toISOString(),
                 icon,
-                color: selectedColor,
                 completed: false
             };
 
@@ -332,34 +159,29 @@
             localStorage.setItem('reminders', JSON.stringify(reminders));
             renderReminders();
 
-            const now = DateTime.now();
-            const timeUntilNotification = reminderDate.diff(now).milliseconds;
+            const reminderDate = new Date(date);
+            const now = new Date();
+            const timeUntilReminder = reminderDate - now;
 
-            if (timeUntilNotification > 0) {
-                setTimeout(() => sendPersistentNotification(reminder), timeUntilNotification);
+            if (timeUntilReminder > 0) {
+                setTimeout(() => {
+                    sendNotification(reminder);
+                }, timeUntilReminder);
             }
         }
 
-        function renderReminders() {
-            const list = document.getElementById('reminders-list');
-            list.innerHTML = '';
-            reminders.forEach(reminder => {
-                const reminderElement = document.createElement('div');
-                reminderElement.className = 'reminder-item';
-                reminderElement.innerHTML = `
-                    <span class="icon">${reminder.icon}</span>
-                    <span>${reminder.text}</span>
-                    <button class="complete-btn" onclick="toggleCompletion(${reminder.id})">${reminder.completed ? '✓ Completato' : 'Completa'}</button>
-                    <button class="delete-btn" onclick="deleteReminder(${reminder.id})">Elimina</button>
-                `;
-                if (reminder.completed) {
-                    reminderElement.classList.add('completed');
-                }
-                list.appendChild(reminderElement);
-            });
+        function sendNotification(reminder) {
+            if (Notification.permission === 'granted') {
+                navigator.serviceWorker.getRegistration().then(reg => {
+                    reg.showNotification(`${reminder.icon} Promemoria`, {
+                        body: reminder.text,
+                        icon: 'path_to_icon.png'
+                    });
+                });
+            }
         }
 
-        function toggleCompletion(id) {
+        function toggleComplete(id) {
             const reminder = reminders.find(r => r.id === id);
             if (reminder) {
                 reminder.completed = !reminder.completed;
@@ -377,80 +199,36 @@
             }
         }
 
-        function searchReminders() {
-            const query = document.getElementById('search-reminder').value.toLowerCase();
-            const filteredReminders = reminders.filter(r => r.text.toLowerCase().includes(query));
-            const list = document.getElementById('reminders-list');
-            list.innerHTML = '';
+        function filterReminders() {
+            const searchText = document.getElementById('search-reminder').value.toLowerCase();
+            const filteredReminders = reminders.filter(reminder =>
+                reminder.text.toLowerCase().includes(searchText)
+            );
+            const remindersList = document.getElementById('reminders-list');
+            remindersList.innerHTML = '';
             filteredReminders.forEach(reminder => {
-                const reminderElement = document.createElement('div');
-                reminderElement.className = 'reminder-item';
-                reminderElement.innerHTML = `
-                    <span class="icon">${reminder.icon}</span>
-                    <span>${reminder.text}</span>
-                    <button class="complete-btn" onclick="toggleCompletion(${reminder.id})">${reminder.completed ? '✓ Completato' : 'Completa'}</button>
-                    <button class="delete-btn" onclick="deleteReminder(${reminder.id})">Elimina</button>
+                const reminderItem = document.createElement('div');
+                reminderItem.className = `reminder-item ${reminder.completed ? 'completed' : ''}`;
+                reminderItem.innerHTML = `
+                    <div class="text">${reminder.icon} ${reminder.text} <span>(${new Date(reminder.date).toLocaleString()})</span></div>
+                    <button onclick="toggleComplete(${reminder.id})">Completa</button>
+                    <button onclick="deleteReminder(${reminder.id})">Elimina</button>
                 `;
-                if (reminder.completed) {
-                    reminderElement.classList.add('completed');
+                remindersList.appendChild(reminderItem);
+            });
+        }
+
+        if (Notification.permission !== 'granted') {
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    console.log('Permesso per le notifiche concesso');
+                } else {
+                    console.log('Permesso per le notifiche negato');
                 }
-                list.appendChild(reminderElement);
             });
         }
 
-        function sortReminders() {
-            reminders.sort((a, b) => new Date(a.date) - new Date(b.date));
-            localStorage.setItem('reminders', JSON.stringify(reminders));
-            renderReminders();
-        }
-
-        function sendPersistentNotification(reminder) {
-            if (Notification.permission === 'granted') {
-                const options = {
-                    body: reminder.text,
-                    icon: reminder.icon
-                };
-                new Notification('Promemoria', options);
-            }
-        }
-
-        function setupColorPicker() {
-            const colors = ['#ffffff', '#f28c28', '#f7a3a3', '#f1c40f', '#2ecc71', '#3498db'];
-            const picker = document.getElementById('color-picker');
-            colors.forEach(color => {
-                const colorOption = document.createElement('div');
-                colorOption.className = 'color-option';
-                colorOption.style.backgroundColor = color;
-                colorOption.onclick = () => selectedColor = color;
-                picker.appendChild(colorOption);
-            });
-        }
-
-        function setupThemePicker() {
-            const themes = ['#ffcccb', '#ccffcc', '#ccccff', '#ffffcc', '#cccccc'];
-            const picker = document.getElementById('theme-picker');
-            themes.forEach(theme => {
-                const themeOption = document.createElement('div');
-                themeOption.className = 'theme-option';
-                themeOption.style.backgroundColor = theme;
-                themeOption.onclick = () => document.documentElement.style.setProperty('--background-color', theme);
-                picker.appendChild(themeOption);
-            });
-        }
-
-        function initializeApp() {
-            setupColorPicker();
-            setupThemePicker();
-            renderReminders();
-
-            if (Notification.permission !== 'granted') {
-                Notification.requestPermission();
-            }
-        }
-
-        initializeApp();
+        renderReminders();
     </script>
-
-    <script src="sw.js"></script>
 </body>
 </html>
