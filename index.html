@@ -284,18 +284,16 @@
             <h2>Visualizza Promemoria</h2>
             <div class="search-bar">
                 <input type="text" id="search-reminder" placeholder="Cerca promemoria" onkeyup="searchReminders()">
+                <button class="sort-button" onclick="sortReminders()">Ordina</button>
             </div>
-            <button class="sort-button" onclick="sortReminders()">Ordina</button>
-            <div id="reminders-list" class="reminders-list"></div>
+            <div class="reminders-list" id="reminders-list"></div>
         </div>
     </div>
 
     <script>
-        // Dichiarazione globale
-        const reminders = [];
+        const reminders = JSON.parse(localStorage.getItem('reminders')) || [];
         let selectedColor = '#ffffff';
 
-        // Funzione per mostrare la sezione attiva
         function showSection(sectionId) {
             document.querySelector('.settings-container.active')?.classList.remove('active');
             document.querySelector('.add-reminder-container.active')?.classList.remove('active');
@@ -304,13 +302,11 @@
             document.getElementById(sectionId).classList.add('active');
         }
 
-        // Funzione per aprire e chiudere la sidebar
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');
             document.getElementById('sidebar-toggle').classList.toggle('open');
         }
 
-        // Funzione per aggiungere un promemoria
         function addReminder() {
             const text = document.getElementById('reminder-text').value;
             const date = document.getElementById('reminder-date').value;
@@ -325,16 +321,16 @@
             const reminder = {
                 id: Date.now(),
                 text,
-                date: reminderDate,
+                date: reminderDate.toISO(),
                 icon,
                 color: selectedColor,
                 completed: false
             };
 
             reminders.push(reminder);
+            localStorage.setItem('reminders', JSON.stringify(reminders));
             renderReminders();
 
-            // Calcola il tempo fino alla notifica
             const now = DateTime.now();
             const timeUntilNotification = reminderDate - now;
 
@@ -343,7 +339,6 @@
             }
         }
 
-        // Funzione per visualizzare i promemoria
         function renderReminders() {
             const list = document.getElementById('reminders-list');
             list.innerHTML = '';
@@ -363,25 +358,24 @@
             });
         }
 
-        // Funzione per completare o non completare un promemoria
         function toggleCompletion(id) {
             const reminder = reminders.find(r => r.id === id);
             if (reminder) {
                 reminder.completed = !reminder.completed;
+                localStorage.setItem('reminders', JSON.stringify(reminders));
                 renderReminders();
             }
         }
 
-        // Funzione per eliminare un promemoria
         function deleteReminder(id) {
             const index = reminders.findIndex(r => r.id === id);
             if (index !== -1) {
                 reminders.splice(index, 1);
+                localStorage.setItem('reminders', JSON.stringify(reminders));
                 renderReminders();
             }
         }
 
-        // Funzione per cercare tra i promemoria
         function searchReminders() {
             const query = document.getElementById('search-reminder').value.toLowerCase();
             const filteredReminders = reminders.filter(r => r.text.toLowerCase().includes(query));
@@ -403,13 +397,12 @@
             });
         }
 
-        // Funzione per ordinare i promemoria
         function sortReminders() {
-            reminders.sort((a, b) => a.date - b.date);
+            reminders.sort((a, b) => new Date(a.date) - new Date(b.date));
+            localStorage.setItem('reminders', JSON.stringify(reminders));
             renderReminders();
         }
 
-        // Funzione per gestire la notifica
         function sendPersistentNotification(reminder) {
             if (Notification.permission === 'granted') {
                 const options = {
@@ -417,12 +410,9 @@
                     icon: reminder.icon
                 };
                 new Notification('Promemoria', options);
-            } else {
-                console.log('Permesso di notifica non concesso.');
             }
         }
 
-        // Funzione per configurare il picker dei colori
         function setupColorPicker() {
             const colors = ['#ffffff', '#f28c28', '#f7a3a3', '#f1c40f', '#2ecc71', '#3498db'];
             const picker = document.getElementById('color-picker');
@@ -435,7 +425,6 @@
             });
         }
 
-        // Funzione per configurare il picker dei temi
         function setupThemePicker() {
             const themes = ['#ffcccb', '#ccffcc', '#ccccff', '#ffffcc', '#cccccc'];
             const picker = document.getElementById('theme-picker');
@@ -448,14 +437,17 @@
             });
         }
 
-        // Inizializzazione
-        setupColorPicker();
-        setupThemePicker();
+        function initializeApp() {
+            setupColorPicker();
+            setupThemePicker();
+            renderReminders();
 
-        // Richiedere il permesso per le notifiche
-        if (Notification.permission !== 'granted') {
-            Notification.requestPermission();
+            if (Notification.permission !== 'granted') {
+                Notification.requestPermission();
+            }
         }
+
+        initializeApp();
     </script>
 
     <script src="sw.js"></script>
