@@ -56,11 +56,6 @@
             cursor: pointer;
             font-size: 24px;
             z-index: 1001;
-            transition: left 0.3s ease;
-        }
-
-        .sidebar.open + .sidebar-toggle {
-            left: 270px;
         }
 
         .menu {
@@ -235,7 +230,7 @@
         </ul>
     </div>
     
-    <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()">
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
         <span>&#9776;</span>
     </button>
 
@@ -307,10 +302,8 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const container = document.getElementById('container');
-            const toggleButton = document.getElementById('sidebar-toggle');
             sidebar.classList.toggle('open');
             container.style.marginLeft = sidebar.classList.contains('open') ? '250px' : '0';
-            toggleButton.style.left = sidebar.classList.contains('open') ? '270px' : '20px';
         }
 
         function showSection(sectionId) {
