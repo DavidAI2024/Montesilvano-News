@@ -234,14 +234,14 @@
             <li><a href="#impostazioni" onclick="showSection('settings')"><i class="icon">⚙️</i>Impostazioni</a></li>
         </ul>
     </div>
-
+    
     <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()">
         <span>&#9776;</span>
     </button>
 
     <div class="container" id="container">
         <h1>📝 Promemoria Personalizzabile</h1>
-
+        
         <div class="settings-container" id="settings">
             <h2>Impostazioni</h2>
             <label for="theme-picker">Tema Pastellato:</label>
@@ -254,12 +254,12 @@
                 <label for="reminder-text">Promemoria:</label>
                 <input type="text" id="reminder-text" placeholder="Inserisci il tuo promemoria">
             </div>
-
+            
             <div class="input-group">
                 <label for="reminder-date">Data e Ora:</label>
                 <input type="datetime-local" id="reminder-date">
             </div>
-
+            
             <div class="input-group">
                 <label for="reminder-icon">Icona:</label>
                 <select id="reminder-icon">
@@ -271,7 +271,7 @@
                     <option value="🎁">🎁 Regalo</option>
                 </select>
             </div>
-
+            
             <div class="input-group">
                 <label for="reminder-color">Colore Promemoria:</label>
                 <div class="color-picker" id="color-picker"></div>
@@ -284,110 +284,33 @@
             <h2>Visualizza Promemoria</h2>
             <div class="search-bar">
                 <input type="text" id="search-reminder" placeholder="Cerca promemoria" onkeyup="searchReminders()">
-                <button class="sort-button" onclick="sortReminders()">Ordina per Data</button>
             </div>
+            <button class="sort-button" onclick="sortReminders()">Ordina</button>
             <div id="reminders-list" class="reminders-list"></div>
         </div>
     </div>
 
     <script>
-        const { DateTime } = luxon;
+        // Dichiarazione globale
+        const reminders = [];
+        let selectedColor = '#ffffff';
 
-        let selectedColor = '#FFFFFF';
-        const colorOptions = ['#FFB3B3', '#B3E0FF', '#B3FFB3', '#FFD9B3'];
-        const themeOptions = [
-            { primary: '#FFB3B3', background: '#F9EAE9', text: '#333' },
-            { primary: '#B3E0FF', background: '#E6F0FF', text: '#333' },
-            { primary: '#B3FFB3', background: '#E6F9E6', text: '#333' },
-            { primary: '#FFD9B3', background: '#FDF0E6', text: '#333' }
-        ];
-        let selectedTheme = themeOptions[0];
-        let reminders = [];
-
-        if ('serviceWorker' in navigator && 'PushManager' in window) {
-            navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('Service Worker registrato', reg))
-                .catch(err => console.error('Service Worker non registrato', err));
-        }
-
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const container = document.getElementById('container');
-            const toggleButton = document.getElementById('sidebar-toggle');
-            sidebar.classList.toggle('open');
-            container.style.marginLeft = sidebar.classList.contains('open') ? '250px' : '0';
-            toggleButton.style.left = sidebar.classList.contains('open') ? '270px' : '20px';
-        }
-
+        // Funzione per mostrare la sezione attiva
         function showSection(sectionId) {
-            document.querySelectorAll('.settings-container, .add-reminder-container, .view-reminders-container').forEach(section => {
-                section.classList.remove('active');
-            });
+            document.querySelector('.settings-container.active')?.classList.remove('active');
+            document.querySelector('.add-reminder-container.active')?.classList.remove('active');
+            document.querySelector('.view-reminders-container.active')?.classList.remove('active');
+            
             document.getElementById(sectionId).classList.add('active');
         }
 
-        function createColorPicker() {
-            const colorPicker = document.getElementById('color-picker');
-            colorOptions.forEach(color => {
-                const colorOption = document.createElement('div');
-                colorOption.className = 'color-option';
-                colorOption.style.backgroundColor = color;
-                colorOption.onclick = () => {
-                    selectedColor = color;
-                    document.querySelectorAll('.color-option').forEach(opt => opt.style.border = 'none');
-                    colorOption.style.border = '2px solid black';
-                };
-                colorPicker.appendChild(colorOption);
-            });
+        // Funzione per aprire e chiudere la sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebar-toggle').classList.toggle('open');
         }
 
-        function createThemePicker() {
-            const themePicker = document.getElementById('theme-picker');
-            themeOptions.forEach((theme, index) => {
-                const themeOption = document.createElement('div');
-                themeOption.className = 'theme-option';
-                themeOption.style.backgroundColor = theme.primary;
-                themeOption.onclick = () => {
-                    selectedTheme = theme;
-                    document.documentElement.style.setProperty('--primary-color', theme.primary);
-                    document.documentElement.style.setProperty('--background-color', theme.background);
-                    document.documentElement.style.setProperty('--text-color', theme.text);
-                    document.querySelectorAll('.theme-option').forEach(opt => opt.style.border = 'none');
-                    themeOption.style.border = '2px solid black';
-                };
-                themePicker.appendChild(themeOption);
-
-                if (index === 0) {
-                    themeOption.style.border = '2px solid black';
-                }
-            });
-        }
-
-        function askNotificationPermission() {
-            if (!("Notification" in window)) {
-                alert("Questo browser non supporta le notifiche.");
-            } else if (Notification.permission !== "granted") {
-                Notification.requestPermission();
-            }
-        }
-
-        function sendPersistentNotification(reminder) {
-            if (Notification.permission === "granted" && navigator.serviceWorker) {
-                navigator.serviceWorker.ready.then(swReg => {
-                    swReg.showNotification(`${reminder.icon} Promemoria`, {
-                        body: reminder.text,
-                        icon: "path_to_icon.png",
-                        tag: reminder.id,
-                        requireInteraction: true,
-                        actions: [
-                            { action: 'complete', title: 'Completa' },
-                            { action: 'snooze', title: 'Rimanda' }
-                        ]
-                    });
-                });
-            }
-        }
-
+        // Funzione per aggiungere un promemoria
         function addReminder() {
             const text = document.getElementById('reminder-text').value;
             const date = document.getElementById('reminder-date').value;
@@ -398,10 +321,11 @@
                 return;
             }
 
+            const reminderDate = DateTime.fromISO(date);
             const reminder = {
                 id: Date.now(),
                 text,
-                date: DateTime.fromISO(date),
+                date: reminderDate,
                 icon,
                 color: selectedColor,
                 completed: false
@@ -409,63 +333,131 @@
 
             reminders.push(reminder);
             renderReminders();
-            sendPersistentNotification(reminder);
+
+            // Calcola il tempo fino alla notifica
+            const now = DateTime.now();
+            const timeUntilNotification = reminderDate - now;
+
+            if (timeUntilNotification > 0) {
+                setTimeout(() => sendPersistentNotification(reminder), timeUntilNotification);
+            }
         }
 
+        // Funzione per visualizzare i promemoria
         function renderReminders() {
-            const remindersList = document.getElementById('reminders-list');
-            remindersList.innerHTML = '';
-
-            const filteredReminders = reminders.filter(reminder => {
-                const searchQuery = document.getElementById('search-reminder').value.toLowerCase();
-                return reminder.text.toLowerCase().includes(searchQuery);
-            });
-
-            filteredReminders.forEach(reminder => {
-                const reminderItem = document.createElement('div');
-                reminderItem.className = `reminder-item ${reminder.completed ? 'completed' : ''}`;
-                reminderItem.style.backgroundColor = reminder.color;
-
-                const reminderContent = document.createElement('div');
-                reminderContent.className = 'reminder-content';
-                reminderContent.innerHTML = `${reminder.icon} ${reminder.text} <span>${reminder.date.toLocaleString(DateTime.DATETIME_MED)}</span>`;
-
-                const completeButton = document.createElement('button');
-                completeButton.className = 'complete-btn';
-                completeButton.textContent = 'Completa';
-                completeButton.onclick = () => {
-                    reminder.completed = !reminder.completed;
-                    renderReminders();
-                };
-
-                const deleteButton = document.createElement('button');
-                deleteButton.className = 'delete-btn';
-                deleteButton.textContent = 'Elimina';
-                deleteButton.onclick = () => {
-                    reminders = reminders.filter(r => r.id !== reminder.id);
-                    renderReminders();
-                };
-
-                reminderItem.appendChild(reminderContent);
-                reminderItem.appendChild(completeButton);
-                reminderItem.appendChild(deleteButton);
-
-                remindersList.appendChild(reminderItem);
+            const list = document.getElementById('reminders-list');
+            list.innerHTML = '';
+            reminders.forEach(reminder => {
+                const reminderElement = document.createElement('div');
+                reminderElement.className = 'reminder-item';
+                reminderElement.innerHTML = `
+                    <span class="icon">${reminder.icon}</span>
+                    <span>${reminder.text}</span>
+                    <button class="complete-btn" onclick="toggleCompletion(${reminder.id})">${reminder.completed ? '✓ Completato' : 'Completa'}</button>
+                    <button class="delete-btn" onclick="deleteReminder(${reminder.id})">Elimina</button>
+                `;
+                if (reminder.completed) {
+                    reminderElement.classList.add('completed');
+                }
+                list.appendChild(reminderElement);
             });
         }
 
+        // Funzione per completare o non completare un promemoria
+        function toggleCompletion(id) {
+            const reminder = reminders.find(r => r.id === id);
+            if (reminder) {
+                reminder.completed = !reminder.completed;
+                renderReminders();
+            }
+        }
+
+        // Funzione per eliminare un promemoria
+        function deleteReminder(id) {
+            const index = reminders.findIndex(r => r.id === id);
+            if (index !== -1) {
+                reminders.splice(index, 1);
+                renderReminders();
+            }
+        }
+
+        // Funzione per cercare tra i promemoria
         function searchReminders() {
-            renderReminders();
+            const query = document.getElementById('search-reminder').value.toLowerCase();
+            const filteredReminders = reminders.filter(r => r.text.toLowerCase().includes(query));
+            const list = document.getElementById('reminders-list');
+            list.innerHTML = '';
+            filteredReminders.forEach(reminder => {
+                const reminderElement = document.createElement('div');
+                reminderElement.className = 'reminder-item';
+                reminderElement.innerHTML = `
+                    <span class="icon">${reminder.icon}</span>
+                    <span>${reminder.text}</span>
+                    <button class="complete-btn" onclick="toggleCompletion(${reminder.id})">${reminder.completed ? '✓ Completato' : 'Completa'}</button>
+                    <button class="delete-btn" onclick="deleteReminder(${reminder.id})">Elimina</button>
+                `;
+                if (reminder.completed) {
+                    reminderElement.classList.add('completed');
+                }
+                list.appendChild(reminderElement);
+            });
         }
 
+        // Funzione per ordinare i promemoria
         function sortReminders() {
             reminders.sort((a, b) => a.date - b.date);
             renderReminders();
         }
 
-        createColorPicker();
-        createThemePicker();
-        askNotificationPermission();
+        // Funzione per gestire la notifica
+        function sendPersistentNotification(reminder) {
+            if (Notification.permission === 'granted') {
+                const options = {
+                    body: reminder.text,
+                    icon: reminder.icon
+                };
+                new Notification('Promemoria', options);
+            } else {
+                console.log('Permesso di notifica non concesso.');
+            }
+        }
+
+        // Funzione per configurare il picker dei colori
+        function setupColorPicker() {
+            const colors = ['#ffffff', '#f28c28', '#f7a3a3', '#f1c40f', '#2ecc71', '#3498db'];
+            const picker = document.getElementById('color-picker');
+            colors.forEach(color => {
+                const colorOption = document.createElement('div');
+                colorOption.className = 'color-option';
+                colorOption.style.backgroundColor = color;
+                colorOption.onclick = () => selectedColor = color;
+                picker.appendChild(colorOption);
+            });
+        }
+
+        // Funzione per configurare il picker dei temi
+        function setupThemePicker() {
+            const themes = ['#ffcccb', '#ccffcc', '#ccccff', '#ffffcc', '#cccccc'];
+            const picker = document.getElementById('theme-picker');
+            themes.forEach(theme => {
+                const themeOption = document.createElement('div');
+                themeOption.className = 'theme-option';
+                themeOption.style.backgroundColor = theme;
+                themeOption.onclick = () => document.documentElement.style.setProperty('--background-color', theme);
+                picker.appendChild(themeOption);
+            });
+        }
+
+        // Inizializzazione
+        setupColorPicker();
+        setupThemePicker();
+
+        // Richiedere il permesso per le notifiche
+        if (Notification.permission !== 'granted') {
+            Notification.requestPermission();
+        }
     </script>
+
+    <script src="sw.js"></script>
 </body>
 </html>
