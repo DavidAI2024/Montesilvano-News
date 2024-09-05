@@ -283,7 +283,7 @@
         <div class="view-reminders-container" id="view-reminders">
             <h2>Visualizza Promemoria</h2>
             <div class="search-bar">
-                <input type="text" id="search-reminder" placeholder="Cerca promemoria" onkeyup="searchReminders()">
+                <input type="text" id="search-reminder" placeholder="Cerca promemoria" oninput="searchReminders()">
                 <button class="sort-button" onclick="sortReminders()">Ordina</button>
             </div>
             <div class="reminders-list" id="reminders-list"></div>
@@ -291,6 +291,7 @@
     </div>
 
     <script>
+        const { DateTime } = luxon;
         const reminders = JSON.parse(localStorage.getItem('reminders')) || [];
         let selectedColor = '#ffffff';
 
@@ -332,7 +333,7 @@
             renderReminders();
 
             const now = DateTime.now();
-            const timeUntilNotification = reminderDate - now;
+            const timeUntilNotification = reminderDate.diff(now).milliseconds;
 
             if (timeUntilNotification > 0) {
                 setTimeout(() => sendPersistentNotification(reminder), timeUntilNotification);
