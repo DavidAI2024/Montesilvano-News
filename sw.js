@@ -1,33 +1,21 @@
-self.addEventListener('install', event => {
-    console.log('Service Worker installato');
+self.addEventListener('install', (event) => {
+    console.log('Service Worker installing.');
 });
 
-self.addEventListener('activate', event => {
-    console.log('Service Worker attivato');
+self.addEventListener('activate', (event) => {
+    console.log('Service Worker activating.');
 });
 
-self.addEventListener('push', event => {
+self.addEventListener('push', (event) => {
+    console.log('Push notification received:', event);
+
     const data = event.data.json();
     const options = {
         body: data.body,
-        icon: data.icon,
-        tag: data.tag,
-        actions: data.actions
+        icon: data.icon
     };
 
     event.waitUntil(
         self.registration.showNotification(data.title, options)
     );
-});
-
-self.addEventListener('notificationclick', event => {
-    const action = event.action;
-
-    if (action === 'complete') {
-        console.log('Promemoria completato');
-    } else if (action === 'snooze') {
-        console.log('Promemoria rimandato');
-    }
-
-    event.notification.close();
 });
