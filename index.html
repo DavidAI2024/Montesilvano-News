@@ -4,81 +4,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestione Promemoria</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.0.0/dist/tailwind.min.css" rel="stylesheet">
     <style>
-        .dark-mode {
+        /* Tailwind CSS CDN */
+        @import url('https://cdn.jsdelivr.net/npm/tailwindcss@3.0.0/dist/tailwind.min.css');
+
+        /* Modal and animation styles */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        #reminder-form {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        #reminder-form.hidden {
+            display: none;
+            animation: fadeOut 0.3s ease-in-out;
+        }
+
+        /* Card effects */
+        .reminder-item {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .reminder-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
             background-color: #1a202c;
             color: #e2e8f0;
         }
-        .dark-mode .container {
+
+        body.dark-mode .bg-white {
             background-color: #2d3748;
-            color: #e2e8f0;
-        }
-        .dark-mode .input-group input,
-        .dark-mode .input-group select,
-        .dark-mode .input-group textarea {
-            background-color: #2d3748;
-            color: #e2e8f0;
             border-color: #4a5568;
+        }
+
+        body.dark-mode .text-gray-900 {
+            color: #edf2f7;
+        }
+
+        body.dark-mode .text-gray-100 {
+            color: #e2e8f0;
         }
     </style>
 </head>
 <body>
-    <div class="container mx-auto p-6 bg-white rounded-lg shadow-lg dark-mode">
-        <h1 class="text-3xl font-bold text-center mb-4">Gestione Promemoria</h1>
-        <button id="theme-toggle" class="mb-4 px-4 py-2 bg-blue-500 text-white rounded-lg focus:outline-none">Passa al Tema Scuro</button>
+    <div class="container mx-auto p-6">
+        <header class="flex justify-between items-center mb-6">
+            <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100">Gestione Promemoria</h1>
+            <button id="theme-toggle" class="px-4 py-2 bg-blue-500 text-white rounded-lg focus:outline-none">Passa al Tema Scuro</button>
+        </header>
         
-        <div class="input-group mb-4">
-            <label for="reminder-text" class="block text-sm font-medium mb-2">Promemoria:</label>
-            <input type="text" id="reminder-text" placeholder="Inserisci il tuo promemoria" class="w-full p-2 border border-gray-300 rounded-md">
-        </div>
-        
-        <div class="input-group mb-4">
-            <label for="reminder-date" class="block text-sm font-medium mb-2">Data e Ora:</label>
-            <input type="datetime-local" id="reminder-date" class="w-full p-2 border border-gray-300 rounded-md">
-        </div>
-        
-        <div class="input-group mb-4">
-            <label for="reminder-icon" class="block text-sm font-medium mb-2">Icona:</label>
-            <select id="reminder-icon" class="w-full p-2 border border-gray-300 rounded-md">
-                <option value="📝">📝 Nota</option>
-                <option value="🎉">🎉 Celebrazione</option>
-                <option value="🏋️">🏋️ Esercizio</option>
-                <option value="🍽️">🍽️ Pasto</option>
-                <option value="💼">💼 Lavoro</option>
-                <option value="🎁">🎁 Regalo</option>
-            </select>
-        </div>
-        
-        <div class="input-group mb-4">
-            <label for="reminder-category" class="block text-sm font-medium mb-2">Categoria:</label>
-            <select id="reminder-category" class="w-full p-2 border border-gray-300 rounded-md">
-                <option value="lavoro">Lavoro</option>
-                <option value="personale">Personale</option>
-                <option value="salute">Salute</option>
-                <option value="finanze">Finanze</option>
-            </select>
-        </div>
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col space-y-4">
+                <button id="open-form" class="px-4 py-2 bg-green-500 text-white rounded-lg focus:outline-none w-full">Aggiungi Promemoria</button>
+                <div id="reminder-chart" class="h-64 w-full"></div>
+                <div id="calendar-view" class="h-64 w-full"></div>
+            </div>
+            
+            <div class="col-span-1 md:col-span-2 lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+                <input type="text" id="search-reminder" placeholder="Cerca promemoria" onkeyup="filterReminders()" class="w-full p-2 border border-gray-300 rounded-md mb-4">
+                <div id="reminders-list"></div>
+            </div>
+        </section>
 
-        <div class="input-group mb-4">
-            <label for="reminder-priority" class="block text-sm font-medium mb-2">Priorità:</label>
-            <select id="reminder-priority" class="w-full p-2 border border-gray-300 rounded-md">
-                <option value="bassa">Bassa</option>
-                <option value="media">Media</option>
-                <option value="alta">Alta</option>
-            </select>
+        <div id="reminder-form" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-lg">
+                <h2 class="text-2xl font-bold mb-4">Nuovo Promemoria</h2>
+                <label for="reminder-text" class="block text-sm font-medium mb-2">Promemoria:</label>
+                <input type="text" id="reminder-text" placeholder="Inserisci il tuo promemoria" class="w-full p-2 border border-gray-300 rounded-md mb-4">
+                <label for="reminder-date" class="block text-sm font-medium mb-2">Data e Ora:</label>
+                <input type="datetime-local" id="reminder-date" class="w-full p-2 border border-gray-300 rounded-md mb-4">
+                <label for="reminder-icon" class="block text-sm font-medium mb-2">Icona:</label>
+                <select id="reminder-icon" class="w-full p-2 border border-gray-300 rounded-md mb-4">
+                    <option value="📝">📝 Nota</option>
+                    <option value="🎉">🎉 Celebrazione</option>
+                    <option value="🏋️">🏋️ Esercizio</option>
+                    <option value="🍽️">🍽️ Pasto</option>
+                    <option value="💼">💼 Lavoro</option>
+                    <option value="🎁">🎁 Regalo</option>
+                </select>
+                <label for="reminder-category" class="block text-sm font-medium mb-2">Categoria:</label>
+                <select id="reminder-category" class="w-full p-2 border border-gray-300 rounded-md mb-4">
+                    <option value="lavoro">Lavoro</option>
+                    <option value="personale">Personale</option>
+                    <option value="salute">Salute</option>
+                    <option value="finanze">Finanze</option>
+                </select>
+                <label for="reminder-priority" class="block text-sm font-medium mb-2">Priorità:</label>
+                <select id="reminder-priority" class="w-full p-2 border border-gray-300 rounded-md mb-4">
+                    <option value="bassa">Bassa</option>
+                    <option value="media">Media</option>
+                    <option value="alta">Alta</option>
+                </select>
+                <button onclick="addReminder()" class="px-4 py-2 bg-blue-500 text-white rounded-lg focus:outline-none">Aggiungi</button>
+                <button onclick="closeForm()" class="px-4 py-2 bg-red-500 text-white rounded-lg focus:outline-none ml-2">Chiudi</button>
+            </div>
         </div>
-        
-        <button onclick="addReminder()" class="px-4 py-2 bg-blue-500 text-white rounded-lg focus:outline-none">Aggiungi Promemoria</button>
-        
-        <div class="search-bar mt-6 mb-4">
-            <input type="text" id="search-reminder" placeholder="Cerca promemoria" onkeyup="filterReminders()" class="w-full p-2 border border-gray-300 rounded-md">
-        </div>
-        
-        <div id="reminders-list" class="mt-4"></div>
     </div>
-
     <script>
+        // Handle theme toggle
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
 
@@ -87,21 +122,21 @@
             themeToggle.textContent = body.classList.contains('dark-mode') ? 'Passa al Tema Chiaro' : 'Passa al Tema Scuro';
         });
 
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js').then(reg => {
-                console.log('Service Worker registrato con successo:', reg);
-                return reg.pushManager.getSubscription();
-            }).then(subscription => {
-                if (subscription === null) {
-                    console.log('Non sei iscritto alle notifiche.');
-                } else {
-                    console.log('Sei già iscritto alle notifiche:', subscription);
-                }
-            }).catch(error => {
-                console.error('Registrazione del Service Worker fallita:', error);
-            });
+        // Handle form visibility
+        const openFormButton = document.getElementById('open-form');
+        const formModal = document.getElementById('reminder-form');
+
+        function openForm() {
+            formModal.classList.remove('hidden');
         }
 
+        function closeForm() {
+            formModal.classList.add('hidden');
+        }
+
+        openFormButton.addEventListener('click', openForm);
+
+        // Data storage and rendering
         let reminders = JSON.parse(localStorage.getItem('reminders')) || [];
 
         function renderReminders() {
@@ -147,7 +182,13 @@
             localStorage.setItem('reminders', JSON.stringify(reminders));
             renderReminders();
 
-            const reminderDate = new Date(date);
+            scheduleNotification(reminder);
+
+            closeForm();
+        }
+
+        function scheduleNotification(reminder) {
+            const reminderDate = new Date(reminder.date);
             const now = new Date();
             const timeUntilReminder = reminderDate - now;
 
@@ -158,37 +199,30 @@
             }
         }
 
-        function sendNotification(reminder) {
-            if (Notification.permission === 'granted') {
-                navigator.serviceWorker.getRegistration().then(reg => {
-                    reg.showNotification(`${reminder.icon} Promemoria`, {
-                        body: reminder.text,
-                        icon: 'path_to_icon.png'
-                    });
-                });
-            }
-        }
-
         function toggleComplete(id) {
-            const reminder = reminders.find(r => r.id === id);
-            if (reminder) {
-                reminder.completed = !reminder.completed;
-                localStorage.setItem('reminders', JSON.stringify(reminders));
-                renderReminders();
-            }
+            reminders = reminders.map(reminder => {
+                if (reminder.id === id) {
+                    return { ...reminder, completed: !reminder.completed };
+                }
+                return reminder;
+            });
+            localStorage.setItem('reminders', JSON.stringify(reminders));
+            renderReminders();
         }
 
         function deleteReminder(id) {
-            reminders = reminders.filter(r => r.id !== id);
+            reminders = reminders.filter(reminder => reminder.id !== id);
             localStorage.setItem('reminders', JSON.stringify(reminders));
             renderReminders();
         }
 
         function filterReminders() {
-            const searchText = document.getElementById('search-reminder').value.toLowerCase();
-            const filteredReminders = reminders.filter(reminder =>
-                reminder.text.toLowerCase().includes(searchText)
-            );
+            const searchTerm = document.getElementById('search-reminder').value.toLowerCase();
+            const filteredReminders = reminders.filter(reminder => reminder.text.toLowerCase().includes(searchTerm));
+            renderFilteredReminders(filteredReminders);
+        }
+
+        function renderFilteredReminders(filteredReminders) {
             const remindersList = document.getElementById('reminders-list');
             remindersList.innerHTML = '';
             filteredReminders.forEach(reminder => {
@@ -205,14 +239,17 @@
             });
         }
 
+        function sendNotification(reminder) {
+            if (Notification.permission === 'granted') {
+                new Notification('Promemoria', {
+                    body: `${reminder.icon} ${reminder.text}`,
+                    icon: 'path_to_icon.png'
+                });
+            }
+        }
+
         if (Notification.permission !== 'granted') {
-            Notification.requestPermission().then(permission => {
-                if (permission === 'granted') {
-                    console.log('Permesso per le notifiche concesso');
-                } else {
-                    console.log('Permesso per le notifiche negato');
-                }
-            });
+            Notification.requestPermission();
         }
 
         renderReminders();
