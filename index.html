@@ -4,89 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestione Promemoria</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.0.0/dist/tailwind.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
+        .dark-mode {
+            background-color: #1a202c;
+            color: #e2e8f0;
         }
-        h1 {
-            text-align: center;
+        .dark-mode .container {
+            background-color: #2d3748;
+            color: #e2e8f0;
         }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .input-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .reminder-item {
-            background: #fff;
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .reminder-item.completed {
-            text-decoration: line-through;
-            background: #e0ffe0;
-        }
-        .reminder-item button {
-            background: #dc3545;
-        }
-        .reminder-item button:hover {
-            background: #c82333;
-        }
-        .search-bar {
-            margin-bottom: 15px;
+        .dark-mode .input-group input,
+        .dark-mode .input-group select,
+        .dark-mode .input-group textarea {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            border-color: #4a5568;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Gestione Promemoria</h1>
-        <div class="input-group">
-            <label for="reminder-text">Promemoria:</label>
-            <input type="text" id="reminder-text" placeholder="Inserisci il tuo promemoria">
+    <div class="container mx-auto p-6 bg-white rounded-lg shadow-lg dark-mode">
+        <h1 class="text-3xl font-bold text-center mb-4">Gestione Promemoria</h1>
+        <button id="theme-toggle" class="mb-4 px-4 py-2 bg-blue-500 text-white rounded-lg focus:outline-none">Passa al Tema Scuro</button>
+        
+        <div class="input-group mb-4">
+            <label for="reminder-text" class="block text-sm font-medium mb-2">Promemoria:</label>
+            <input type="text" id="reminder-text" placeholder="Inserisci il tuo promemoria" class="w-full p-2 border border-gray-300 rounded-md">
         </div>
-        <div class="input-group">
-            <label for="reminder-date">Data e Ora:</label>
-            <input type="datetime-local" id="reminder-date">
+        
+        <div class="input-group mb-4">
+            <label for="reminder-date" class="block text-sm font-medium mb-2">Data e Ora:</label>
+            <input type="datetime-local" id="reminder-date" class="w-full p-2 border border-gray-300 rounded-md">
         </div>
-        <div class="input-group">
-            <label for="reminder-icon">Icona:</label>
-            <select id="reminder-icon">
+        
+        <div class="input-group mb-4">
+            <label for="reminder-icon" class="block text-sm font-medium mb-2">Icona:</label>
+            <select id="reminder-icon" class="w-full p-2 border border-gray-300 rounded-md">
                 <option value="📝">📝 Nota</option>
                 <option value="🎉">🎉 Celebrazione</option>
                 <option value="🏋️">🏋️ Esercizio</option>
@@ -95,16 +49,44 @@
                 <option value="🎁">🎁 Regalo</option>
             </select>
         </div>
-        <button onclick="addReminder()">Aggiungi Promemoria</button>
         
-        <div class="search-bar">
-            <input type="text" id="search-reminder" placeholder="Cerca promemoria" onkeyup="filterReminders()">
+        <div class="input-group mb-4">
+            <label for="reminder-category" class="block text-sm font-medium mb-2">Categoria:</label>
+            <select id="reminder-category" class="w-full p-2 border border-gray-300 rounded-md">
+                <option value="lavoro">Lavoro</option>
+                <option value="personale">Personale</option>
+                <option value="salute">Salute</option>
+                <option value="finanze">Finanze</option>
+            </select>
+        </div>
+
+        <div class="input-group mb-4">
+            <label for="reminder-priority" class="block text-sm font-medium mb-2">Priorità:</label>
+            <select id="reminder-priority" class="w-full p-2 border border-gray-300 rounded-md">
+                <option value="bassa">Bassa</option>
+                <option value="media">Media</option>
+                <option value="alta">Alta</option>
+            </select>
         </div>
         
-        <div id="reminders-list"></div>
+        <button onclick="addReminder()" class="px-4 py-2 bg-blue-500 text-white rounded-lg focus:outline-none">Aggiungi Promemoria</button>
+        
+        <div class="search-bar mt-6 mb-4">
+            <input type="text" id="search-reminder" placeholder="Cerca promemoria" onkeyup="filterReminders()" class="w-full p-2 border border-gray-300 rounded-md">
+        </div>
+        
+        <div id="reminders-list" class="mt-4"></div>
     </div>
 
     <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            themeToggle.textContent = body.classList.contains('dark-mode') ? 'Passa al Tema Chiaro' : 'Passa al Tema Scuro';
+        });
+
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/service-worker.js').then(reg => {
                 console.log('Service Worker registrato con successo:', reg);
@@ -120,18 +102,20 @@
             });
         }
 
-        const reminders = JSON.parse(localStorage.getItem('reminders')) || [];
+        let reminders = JSON.parse(localStorage.getItem('reminders')) || [];
 
         function renderReminders() {
             const remindersList = document.getElementById('reminders-list');
             remindersList.innerHTML = '';
             reminders.forEach(reminder => {
                 const reminderItem = document.createElement('div');
-                reminderItem.className = `reminder-item ${reminder.completed ? 'completed' : ''}`;
+                reminderItem.className = `reminder-item ${reminder.completed ? 'completed' : ''} p-4 mb-2 border border-gray-300 rounded-md bg-white dark:bg-gray-700 dark:border-gray-600 flex justify-between items-center`;
                 reminderItem.innerHTML = `
-                    <div class="text">${reminder.icon} ${reminder.text} <span>(${new Date(reminder.date).toLocaleString()})</span></div>
-                    <button onclick="toggleComplete(${reminder.id})">Completa</button>
-                    <button onclick="deleteReminder(${reminder.id})">Elimina</button>
+                    <div class="text">${reminder.icon} ${reminder.text} <span class="text-gray-500">(${new Date(reminder.date).toLocaleString()})</span></div>
+                    <div class="flex space-x-2">
+                        <button onclick="toggleComplete(${reminder.id})" class="px-3 py-1 bg-green-500 text-white rounded-lg focus:outline-none">${reminder.completed ? 'Non Completato' : 'Completa'}</button>
+                        <button onclick="deleteReminder(${reminder.id})" class="px-3 py-1 bg-red-500 text-white rounded-lg focus:outline-none">Elimina</button>
+                    </div>
                 `;
                 remindersList.appendChild(reminderItem);
             });
@@ -141,6 +125,8 @@
             const text = document.getElementById('reminder-text').value;
             const date = document.getElementById('reminder-date').value;
             const icon = document.getElementById('reminder-icon').value;
+            const category = document.getElementById('reminder-category').value;
+            const priority = document.getElementById('reminder-priority').value;
 
             if (!text || !date) {
                 alert('Per favore, compila tutti i campi');
@@ -152,6 +138,8 @@
                 text,
                 date: new Date(date).toISOString(),
                 icon,
+                category,
+                priority,
                 completed: false
             };
 
@@ -191,12 +179,9 @@
         }
 
         function deleteReminder(id) {
-            const index = reminders.findIndex(r => r.id === id);
-            if (index !== -1) {
-                reminders.splice(index, 1);
-                localStorage.setItem('reminders', JSON.stringify(reminders));
-                renderReminders();
-            }
+            reminders = reminders.filter(r => r.id !== id);
+            localStorage.setItem('reminders', JSON.stringify(reminders));
+            renderReminders();
         }
 
         function filterReminders() {
@@ -208,11 +193,13 @@
             remindersList.innerHTML = '';
             filteredReminders.forEach(reminder => {
                 const reminderItem = document.createElement('div');
-                reminderItem.className = `reminder-item ${reminder.completed ? 'completed' : ''}`;
+                reminderItem.className = `reminder-item ${reminder.completed ? 'completed' : ''} p-4 mb-2 border border-gray-300 rounded-md bg-white dark:bg-gray-700 dark:border-gray-600 flex justify-between items-center`;
                 reminderItem.innerHTML = `
-                    <div class="text">${reminder.icon} ${reminder.text} <span>(${new Date(reminder.date).toLocaleString()})</span></div>
-                    <button onclick="toggleComplete(${reminder.id})">Completa</button>
-                    <button onclick="deleteReminder(${reminder.id})">Elimina</button>
+                    <div class="text">${reminder.icon} ${reminder.text} <span class="text-gray-500">(${new Date(reminder.date).toLocaleString()})</span></div>
+                    <div class="flex space-x-2">
+                        <button onclick="toggleComplete(${reminder.id})" class="px-3 py-1 bg-green-500 text-white rounded-lg focus:outline-none">${reminder.completed ? 'Non Completato' : 'Completa'}</button>
+                        <button onclick="deleteReminder(${reminder.id})" class="px-3 py-1 bg-red-500 text-white rounded-lg focus:outline-none">Elimina</button>
+                    </div>
                 `;
                 remindersList.appendChild(reminderItem);
             });
