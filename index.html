@@ -242,6 +242,7 @@
             <li><a href="#" onclick="showSection('add-reminder-container')">Aggiungi Promemoria</a></li>
             <li><a href="#" onclick="showSection('view-reminders-container')">Visualizza Promemoria</a></li>
             <li><a href="#" onclick="showSection('settings-container')">Impostazioni</a></li>
+            <li><a href="#" onclick="showSection('themes-container')">Temi</a></li>
         </ul>
     </div>
     <div id="container">
@@ -279,9 +280,21 @@
 
         <div id="settings-container" class="container">
             <h2>Impostazioni</h2>
+            <div class="input-group">
+                <label for="show-reminders">Visualizza Promemoria:</label>
+                <input type="checkbox" id="show-reminders" checked onchange="toggleShowReminders()">
+            </div>
+            <div class="input-group">
+                <label for="create-reminders">Crea Promemoria:</label>
+                <input type="checkbox" id="create-reminders" checked onchange="toggleCreateReminders()">
+            </div>
+        </div>
+
+        <div id="themes-container" class="container">
+            <h2>Temi</h2>
             <div class="theme-picker">
-                <div class="theme-option" style="background-color: #FFB3B3;" onclick="setTheme('#FFB3B3', '#F9EAE9', '#333')"></div>
-                <div class="theme-option" style="background-color: #B3E0FF;" onclick="setTheme('#B3E0FF', '#E6F0FF', '#333')"></div>
+                <div class="theme-option" style="background-color: #ffffff;" onclick="setTheme('#ffffff', '#f4f4f4', '#333')"></div>
+                <div class="theme-option" style="background-color: #000000;" onclick="setTheme('#000000', '#333333', '#f4f4f4')"></div>
                 <div class="theme-option" style="background-color: #B3FFB3;" onclick="setTheme('#B3FFB3', '#E6FFE6', '#333')"></div>
                 <div class="theme-option" style="background-color: #D9D9D9;" onclick="setTheme('#D9D9D9', '#F4F4F4', '#333')"></div>
             </div>
