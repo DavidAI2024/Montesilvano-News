@@ -3,70 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Material Design Magnet Downloader</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <title>Advanced Animated Magnet Downloader</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
-        body {
-            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
-            animation: backgroundShift 10s infinite alternate ease-in-out;
+        body, html {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
             overflow-x: hidden;
-            height: 100%;
+            background: #000;
+            color: #fff;
         }
-        @keyframes backgroundShift {
-            0% { background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); }
-            50% { background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%); }
-            100% { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); }
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #ff00ff, #00ffff, #ff00ff);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            opacity: 0.3;
+            z-index: -1;
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         .glass {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             padding: 30px;
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            backdrop-filter: blur(8.5px);
+            backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.18);
         }
-        .parallax {
-            background-image: url('/api/placeholder/1600/900');
-            height: 50vh;
-            background-attachment: fixed;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-            position: relative;
-            z-index: -1;
-        }
         .navbar {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(10px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         }
-        .navbar ul {
-            display: flex;
-            justify-content: space-around;
-            padding: 15px;
-            list-style: none;
-        }
-        .navbar ul li a {
-            color: #fff;
-            font-size: 16px;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        .navbar ul li a:hover {
-            color: #ffeb3b;
-        }
         .btn-primary {
-            @apply bg-blue-500 text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition duration-300 ease-in-out hover:bg-blue-700 hover:scale-105 flex items-center justify-center;
+            @apply bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition duration-300 ease-in-out hover:from-pink-500 hover:to-purple-500 hover:scale-105 flex items-center justify-center;
         }
         .floating-btn {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background-color: #f50057;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
             width: 60px;
             height: 60px;
             border-radius: 50%;
@@ -75,30 +65,39 @@
             align-items: center;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
+            transition: all 0.3s ease;
         }
         .floating-btn:hover {
-            background-color: #d5004f;
-            transform: scale(1.05);
-        }
-        .floating-btn .material-icons {
-            color: white;
-            font-size: 30px;
-        }
-        .gsap-section {
-            opacity: 0;
+            transform: scale(1.1) rotate(180deg);
         }
         .card {
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
             padding: 20px;
             text-align: center;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            overflow: hidden;
+            position: relative;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+        }
+        .card:hover::before {
+            left: 150%;
+            transition: all 0.5s ease;
         }
         .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
         .modal {
             display: none;
@@ -109,91 +108,127 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0,0,0,0.4);
+            background-color: rgba(0,0,0,0.7);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         .modal-content {
-            background-color: #fefefe;
+            background: rgba(255, 255, 255, 0.1);
             margin: 15% auto;
             padding: 20px;
-            border: 1px solid #888;
+            border: 1px solid rgba(255, 255, 255, 0.18);
             width: 80%;
             max-width: 500px;
-            border-radius: 10px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(8px);
+            transform: scale(0.7);
+            transition: all 0.3s ease;
         }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
+        .modal.show {
+            opacity: 1;
         }
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar fixed top-0 w-full">
-        <ul>
-            <li><a href="#"><i class="material-icons align-middle mr-1">home</i> X-Dor</a></li>
+    <div class="gradient-bg"></div>
+    <div id="canvas-container"></div>
+    <nav class="navbar fixed top-0 w-full z-50">
+        <ul class="flex justify-around py-4">
+            <li><a href="#" class="text-white hover:text-purple-300 transition duration-300"><i class="material-icons align-middle mr-1">home</i> X-Dor</a></li>
         </ul>
     </nav>
-    <div class="parallax"></div>
-    <section class="container mx-auto py-10 px-6 gsap-section">
-        <div class="glass max-w-md mx-auto text-center p-10 rounded-lg shadow-lg">
-            <h1 class="text-2xl text-gray-800 font-bold animate__animated animate__fadeInDown flex items-center justify-center">
-                <i class="material-icons mr-2">cloud_download</i>Download Magnet Link
+    <section class="container mx-auto py-20 px-6">
+        <div class="glass max-w-md mx-auto text-center p-10 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
+            <h1 class="text-3xl font-bold mb-6 animate-pulse">
+                <i class="material-icons mr-2 align-middle">cloud_download</i>Download Magnet Link
             </h1>
             <div class="mt-5 relative">
                 <i class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">link</i>
-                <input id="magnetLink" type="text" class="w-full p-3 pl-10 text-center rounded-md focus:ring-4 focus:ring-blue-200" placeholder="Inserisci magnet link">
+                <input id="magnetLink" type="text" class="w-full p-3 pl-10 text-center rounded-md bg-black bg-opacity-50 focus:ring-4 focus:ring-purple-500 text-white" placeholder="Inserisci magnet link">
             </div>
             <button id="downloadButton" class="btn-primary mt-5">
                 <i class="material-icons mr-2">file_download</i>Download
             </button>
-            <p id="status" class="mt-3 text-gray-600"></p>
+            <p id="status" class="mt-3 text-gray-300"></p>
         </div>
     </section>
-    <section class="container mx-auto py-10 px-6 gsap-section">
+    <section class="container mx-auto py-10 px-6">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="card">
-                <i class="material-icons text-4xl text-blue-500 mb-4">computer</i>
-                <h2 class="text-lg font-bold">Requisito Client Torrent</h2>
-                <p class="text-gray-600">Per scaricare questo magnet link, è necessario avere un client torrent installato sul tuo dispositivo.</p>
+                <i class="material-icons text-5xl text-blue-400 mb-4">computer</i>
+                <h2 class="text-xl font-bold mb-2">Requisito Client Torrent</h2>
+                <p class="text-gray-300">Per scaricare questo magnet link, è necessario avere un client torrent installato sul tuo dispositivo.</p>
             </div>
             <div class="card">
-                <i class="material-icons text-4xl text-green-500 mb-4">thumb_up</i>
-                <h2 class="text-lg font-bold">Client Consigliati</h2>
-                <p class="text-gray-600">Raccomandiamo l'utilizzo di client torrent come uTorrent per desktop o Fluid dal Play Store per dispositivi Android.</p>
+                <i class="material-icons text-5xl text-green-400 mb-4">thumb_up</i>
+                <h2 class="text-xl font-bold mb-2">Client Consigliati</h2>
+                <p class="text-gray-300">Raccomandiamo l'utilizzo di client torrent come uTorrent per desktop o Fluid dal Play Store per dispositivi Android.</p>
             </div>
             <div class="card">
-                <i class="material-icons text-4xl text-yellow-500 mb-4">warning</i>
-                <h2 class="text-lg font-bold">Attenzione</h2>
-                <p class="text-gray-600">Assicurati di avere un client torrent installato prima di procedere con il download del magnet link.</p>
+                <i class="material-icons text-5xl text-yellow-400 mb-4">warning</i>
+                <h2 class="text-xl font-bold mb-2">Attenzione</h2>
+                <p class="text-gray-300">Assicurati di avere un client torrent installato prima di procedere con il download del magnet link.</p>
             </div>
         </div>
     </section>
     <div class="floating-btn">
-        <span class="material-icons">add</span>
+        <span class="material-icons text-white">add</span>
     </div>
     <div id="torrentModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2 class="text-xl font-bold mb-4 flex items-center">
+        <div class="modal-content text-white">
+            <span class="close text-3xl font-bold cursor-pointer float-right">&times;</span>
+            <h2 class="text-2xl font-bold mb-4 flex items-center">
                 <i class="material-icons mr-2">get_app</i>Installa un Client Torrent
             </h2>
             <p>Per aprire questo link magnet, hai bisogno di un client torrent. Ecco alcune opzioni popolari:</p>
-            <ul class="list-disc list-inside mt-2">
-                <li><a href="https://www.qbittorrent.org/download.php" target="_blank" class="text-blue-500 hover:underline flex items-center"><i class="material-icons mr-1">download</i>qBittorrent</a></li>
-                <li><a href="https://www.transmissionbt.com/download/" target="_blank" class="text-blue-500 hover:underline flex items-center"><i class="material-icons mr-1">download</i>Transmission</a></li>
-                <li><a href="https://www.utorrent.com/downloads/complete/track/stable/os/win" target="_blank" class="text-blue-500 hover:underline flex items-center"><i class="material-icons mr-1">download</i>uTorrent</a></li>
+            <ul class="list-disc list-inside mt-4 space-y-2">
+                <li><a href="https://www.qbittorrent.org/download.php" target="_blank" class="text-blue-300 hover:text-blue-500 transition duration-300 flex items-center"><i class="material-icons mr-1">download</i>qBittorrent</a></li>
+                <li><a href="https://www.transmissionbt.com/download/" target="_blank" class="text-blue-300 hover:text-blue-500 transition duration-300 flex items-center"><i class="material-icons mr-1">download</i>Transmission</a></li>
+                <li><a href="https://www.utorrent.com/downloads/complete/track/stable/os/win" target="_blank" class="text-blue-300 hover:text-blue-500 transition duration-300 flex items-center"><i class="material-icons mr-1">download</i>uTorrent</a></li>
             </ul>
-            <p class="mt-4">Dopo l'installazione, riprova ad aprire il link magnet.</p>
+            <p class="mt-6">Dopo l'installazione, riprova ad aprire il link magnet.</p>
         </div>
     </div>
     <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.from(".glass", {
+            opacity: 0,
+            y: 100,
+            duration: 1,
+            scrollTrigger: {
+                trigger: ".glass",
+                start: "top 80%",
+                end: "top 20%",
+                scrub: 1
+            }
+        });
+
+        gsap.from(".card", {
+            opacity: 0,
+            y: 50,
+            stagger: 0.2,
+            duration: 1,
+            scrollTrigger: {
+                trigger: ".card",
+                start: "top 80%",
+                end: "top 20%",
+                scrub: 1
+            }
+        });
+
         document.getElementById('downloadButton').addEventListener('click', function () {
             var magnetLink = document.getElementById('magnetLink').value;
             var status = document.getElementById('status');
@@ -207,24 +242,62 @@
             }
             var opened = window.open(magnetLink, '_blank');
             if (!opened || opened.closed || typeof opened.closed == 'undefined') {
-                document.getElementById('torrentModal').style.display = "block";
+                showModal();
             } else {
                 status.textContent = 'Il link magnet è stato inviato al client torrent.';
             }
         });
-        document.getElementsByClassName("close")[0].onclick = function() {
-            document.getElementById('torrentModal').style.display = "none";
+
+        function showModal() {
+            var modal = document.getElementById('torrentModal');
+            modal.style.display = "block";
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
         }
+
+        function closeModal() {
+            var modal = document.getElementById('torrentModal');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = "none";
+            }, 300);
+        }
+
+        document.getElementsByClassName("close")[0].onclick = closeModal;
+
         window.onclick = function(event) {
             var modal = document.getElementById('torrentModal');
             if (event.target == modal) {
-                modal.style.display = "none";
+                closeModal();
             }
         }
-        gsap.to(".gsap-section", { 
-            opacity: 1, 
-            duration: 1.5, 
-            stagger: 0.5 
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
+        const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
+        const torusKnot = new THREE.Mesh(geometry, material);
+        scene.add(torusKnot);
+
+        camera.position.z = 30;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            torusKnot.rotation.x += 0.01;
+            torusKnot.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', function() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
         });
     </script>
 </body>
