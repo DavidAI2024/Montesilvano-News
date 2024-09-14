@@ -4,38 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advanced Material Design Magnet Downloader</title>
-
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-
-    <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-
-    <!-- GSAP for animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
-
     <style>
-        /* Background Animation */
         body {
             background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
             animation: backgroundShift 10s infinite alternate ease-in-out;
             overflow-x: hidden;
             height: 100%;
         }
-
         @keyframes backgroundShift {
             0% { background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); }
             50% { background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%); }
             100% { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); }
         }
-
-        /* Glass Effect Container */
         .glass {
             background: rgba(255, 255, 255, 0.15);
             border-radius: 20px;
@@ -44,8 +29,6 @@
             backdrop-filter: blur(8.5px);
             border: 1px solid rgba(255, 255, 255, 0.18);
         }
-
-        /* Parallax Effect */
         .parallax {
             background-image: url('/api/placeholder/1600/900');
             height: 50vh;
@@ -56,38 +39,29 @@
             position: relative;
             z-index: -1;
         }
-
-        /* Navbar */
         .navbar {
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         }
-
         .navbar ul {
             display: flex;
             justify-content: space-around;
             padding: 15px;
             list-style: none;
         }
-
         .navbar ul li a {
             color: #fff;
             font-size: 16px;
             text-decoration: none;
             transition: color 0.3s ease;
         }
-
         .navbar ul li a:hover {
             color: #ffeb3b;
         }
-
-        /* Button Styles */
         .btn-primary {
             @apply bg-blue-500 text-white font-bold py-2 px-4 rounded-full shadow-lg transform transition duration-300 ease-in-out hover:bg-blue-700 hover:scale-105;
         }
-
-        /* Floating buttons */
         .floating-btn {
             position: fixed;
             bottom: 30px;
@@ -103,23 +77,17 @@
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.3s ease;
         }
-
         .floating-btn:hover {
             background-color: #d5004f;
             transform: scale(1.05);
         }
-
         .floating-btn .material-icons {
             color: white;
             font-size: 30px;
         }
-        
-        /* GSAP animated sections */
         .gsap-section {
             opacity: 0;
         }
-
-        /* Advanced Cards */
         .card {
             background: rgba(255, 255, 255, 0.6);
             border-radius: 10px;
@@ -128,13 +96,10 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
         .card:hover {
             transform: translateY(-10px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
-
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -146,7 +111,6 @@
             overflow: auto;
             background-color: rgba(0,0,0,0.4);
         }
-
         .modal-content {
             background-color: #fefefe;
             margin: 15% auto;
@@ -156,25 +120,49 @@
             max-width: 500px;
             border-radius: 10px;
         }
-
         .close {
             color: #aaa;
             float: right;
             font-size: 28px;
             font-weight: bold;
         }
-
         .close:hover,
         .close:focus {
             color: black;
             text-decoration: none;
             cursor: pointer;
         }
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+        }
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        .tab button.active {
+            background-color: #ccc;
+        }
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
     </style>
 </head>
 <body>
-
-    <!-- Navbar -->
     <nav class="navbar fixed top-0 w-full">
         <ul>
             <li><a href="#">Home</a></li>
@@ -183,11 +171,7 @@
             <li><a href="#">Contact</a></li>
         </ul>
     </nav>
-
-    <!-- Parallax Section -->
     <div class="parallax"></div>
-
-    <!-- Content Section -->
     <section class="container mx-auto py-10 px-6 gsap-section">
         <div class="glass max-w-md mx-auto text-center p-10 rounded-lg shadow-lg">
             <h1 class="text-2xl text-gray-800 font-bold animate__animated animate__fadeInDown">Download Magnet Link</h1>
@@ -198,8 +182,6 @@
             <p id="status" class="mt-3 text-gray-600"></p>
         </div>
     </section>
-
-    <!-- Card Section -->
     <section class="container mx-auto py-10 px-6 gsap-section">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="card">
@@ -216,68 +198,74 @@
             </div>
         </div>
     </section>
-
-    <!-- Floating Button -->
     <div class="floating-btn">
         <span class="material-icons">add</span>
     </div>
-
-    <!-- Modal -->
     <div id="torrentModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2 class="text-xl font-bold mb-4">Installa un Client Torrent</h2>
-            <p>Per aprire questo link magnet, hai bisogno di un client torrent. Ecco alcune opzioni popolari:</p>
-            <ul class="list-disc list-inside mt-2">
-                <li><a href="https://www.qbittorrent.org/download.php" target="_blank" class="text-blue-500 hover:underline">qBittorrent</a></li>
-                <li><a href="https://www.transmissionbt.com/download/" target="_blank" class="text-blue-500 hover:underline">Transmission</a></li>
-                <li><a href="https://www.utorrent.com/downloads/complete/track/stable/os/win" target="_blank" class="text-blue-500 hover:underline">uTorrent</a></li>
-            </ul>
-            <p class="mt-4">Dopo l'installazione, riprova ad aprire il link magnet.</p>
+            <h2 class="text-xl font-bold mb-4">Gestione del Link Magnet</h2>
+            <div class="tab">
+                <button class="tablinks active" onclick="openTab(event, 'OpenLink')">Apri Link</button>
+                <button class="tablinks" onclick="openTab(event, 'InstallClient')">Installa Client</button>
+            </div>
+            <div id="OpenLink" class="tabcontent" style="display:block;">
+                <p>Clicca sul pulsante qui sotto per tentare di aprire il link magnet con il tuo client torrent:</p>
+                <button id="openMagnetButton" class="btn-primary mt-3">Apri Link Magnet</button>
+                <p class="mt-3">Se non succede nulla dopo aver cliccato, potresti non avere un client torrent installato. Passa alla scheda "Installa Client" per le istruzioni su come installarne uno.</p>
+            </div>
+            <div id="InstallClient" class="tabcontent">
+                <p>Per aprire questo link magnet, hai bisogno di un client torrent. Ecco alcune opzioni popolari:</p>
+                <ul class="list-disc list-inside mt-2">
+                    <li><a href="https://www.qbittorrent.org/download.php" target="_blank" class="text-blue-500 hover:underline">qBittorrent</a></li>
+                    <li><a href="https://www.transmissionbt.com/download/" target="_blank" class="text-blue-500 hover:underline">Transmission</a></li>
+                    <li><a href="https://www.utorrent.com/downloads/complete/track/stable/os/win" target="_blank" class="text-blue-500 hover:underline">uTorrent</a></li>
+                </ul>
+                <p class="mt-4">Dopo l'installazione, torna alla scheda "Apri Link" e prova ad aprire il link magnet.</p>
+            </div>
         </div>
     </div>
-
-    <!-- GSAP Animations -->
     <script>
+        var currentMagnetLink = '';
         document.getElementById('downloadButton').addEventListener('click', function () {
             var magnetLink = document.getElementById('magnetLink').value;
             var status = document.getElementById('status');
-
             if (magnetLink.trim() === '') {
                 status.textContent = 'Inserisci un link magnet valido.';
                 return;
             }
-
             if (!magnetLink.startsWith('magnet:')) {
                 status.textContent = 'Il link inserito non è valido.';
                 return;
             }
-
-            // Try to open the magnet link
-            var opened = window.open(magnetLink, '_blank');
-
-            if (!opened || opened.closed || typeof opened.closed == 'undefined') {
-                // If the link couldn't be opened, show the modal
-                document.getElementById('torrentModal').style.display = "block";
-            } else {
-                status.textContent = 'Il link magnet è stato inviato al client torrent.';
-            }
+            currentMagnetLink = magnetLink;
+            document.getElementById('torrentModal').style.display = "block";
         });
-
-        // Close modal when clicking on <span> (x)
+        document.getElementById('openMagnetButton').addEventListener('click', function() {
+            window.location.href = currentMagnetLink;
+        });
         document.getElementsByClassName("close")[0].onclick = function() {
             document.getElementById('torrentModal').style.display = "none";
         }
-
-        // Close modal when clicking outside of it
         window.onclick = function(event) {
             var modal = document.getElementById('torrentModal');
             if (event.target == modal) {
                 modal.style.display = "none";
             }
         }
-
-        // GSAP animations
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
         gsap.to(".gsap-section", { 
             opacity: 1, 
             duration: 1.5, 
