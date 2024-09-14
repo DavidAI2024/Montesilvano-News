@@ -16,21 +16,22 @@
             margin: 0;
             padding: 0;
             overflow-x: hidden;
+            background: #000;
             color: #fff;
-            background-color: transparent;
         }
-        .complex-bg {
+        .gradient-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(45deg, #ffcccb, #ffd1dc, #ffdab9, #ffefd5);
+            background: linear-gradient(45deg, #ff00ff, #00ffff, #ff00ff);
             background-size: 400% 400%;
-            animation: gradientShift 4s ease infinite;
-            z-index: -2;
+            animation: gradientBG 15s ease infinite;
+            opacity: 0.3;
+            z-index: -1;
         }
-        @keyframes gradientShift {
+        @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
@@ -162,7 +163,7 @@
     </style>
 </head>
 <body>
-    <div class="complex-bg"></div>
+    <div class="gradient-bg"></div>
     <div id="canvas-container"></div>
     <nav class="navbar fixed top-0 w-full z-50">
         <ul class="flex justify-around items-center py-4">
@@ -369,25 +370,6 @@
             var createdBy = document.getElementById('createdBy');
             createdBy.classList.toggle('hidden');
         });
-
-        function changeBackgroundColor() {
-            const colors = [
-                ['#ffcccb', '#ffd1dc', '#ffdab9', '#ffefd5'],
-                ['#e6e6fa', '#d8bfd8', '#dda0dd', '#da70d6'],
-                ['#b0e0e6', '#add8e6', '#87cefa', '#87ceeb'],
-                ['#98fb98', '#90ee90', '#00fa9a', '#00ff7f']
-            ];
-            let currentColorSet = 0;
-
-            setInterval(() => {
-                const complexBg = document.querySelector('.complex-bg');
-                currentColorSet = (currentColorSet + 1) % colors.length;
-                const newGradient = `linear-gradient(45deg, ${colors[currentColorSet].join(', ')})`;
-                complexBg.style.background = newGradient;
-            }, 4000);
-        }
-
-        changeBackgroundColor();
     </script>
 </body>
 </html>
