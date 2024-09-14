@@ -50,7 +50,39 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         }
         .btn-primary {
-            @apply bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition duration-300 ease-in-out hover:from-pink-500 hover:to-purple-500 hover:scale-105 flex items-center justify-center;
+            background-image: linear-gradient(to right, #9f7aea, #ed64a6);
+            color: white;
+            font-weight: bold;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: translateY(0);
+            transition: all 0.3s ease-in-out;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-primary:hover {
+            background-image: linear-gradient(to right, #ed64a6, #9f7aea);
+            transform: translateY(-2px) scale(1.05);
+        }
+        .floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .floating-btn:hover {
+            transform: scale(1.1) rotate(180deg);
         }
         .card {
             background: rgba(255, 255, 255, 0.1);
@@ -121,37 +153,12 @@
             height: 100%;
             z-index: -1;
         }
-        .creator-info {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 10px 20px;
-            border-radius: 30px;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            transition: all 0.3s ease;
+        .social-links a {
+            color: white;
+            transition: color 0.3s ease;
         }
-        .creator-info:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-        .history-list {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        .history-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            margin-bottom: 10px;
-            padding: 10px;
-            transition: all 0.3s ease;
-        }
-        .history-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateX(5px);
+        .social-links a:hover {
+            color: #a78bfa;
         }
     </style>
 </head>
@@ -159,16 +166,16 @@
     <div class="gradient-bg"></div>
     <div id="canvas-container"></div>
     <nav class="navbar fixed top-0 w-full z-50">
-        <ul class="flex justify-around py-4">
+        <ul class="flex justify-around items-center py-4">
             <li><a href="#" class="text-white hover:text-purple-300 transition duration-300"><i class="material-icons align-middle mr-1">home</i> X-Dor</a></li>
             <li><a href="https://t.me/your_telegram_channel" target="_blank" class="text-white hover:text-purple-300 transition duration-300"><i class="material-icons align-middle mr-1">send</i> Canale Telegram</a></li>
-            <li><a href="#" onclick="showHistoryModal()" class="text-white hover:text-purple-300 transition duration-300"><i class="material-icons align-middle mr-1">history</i> Cronologia</a></li>
+            
         </ul>
     </nav>
     <section class="container mx-auto py-20 px-6">
         <div class="glass max-w-md mx-auto text-center p-10 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
             <h1 class="text-3xl font-bold mb-6 animate-pulse">
-                <i class="material-icons mr-2 align-middle">cloud_download</i>Download Magnet Link
+                <i class="material-icons mr-2 align-middle">cloud_download</i>🍔 Scarica Magnet Link
             </h1>
             <div class="mt-5 relative">
                 <i class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">link</i>
@@ -199,9 +206,8 @@
             </div>
         </div>
     </section>
-    <div class="creator-info">
-        <i class="material-icons mr-2 text-purple-400">code</i>
-        <span>Created by <a href="https://t.me/hackerandolo" target="_blank" class="text-purple-300 hover:text-purple-500 transition duration-300">@hackerandolo</a></span>
+    <div class="floating-btn">
+        <span class="material-icons text-white">add</span>
     </div>
     <div id="torrentModal" class="modal">
         <div class="modal-content text-white">
@@ -218,17 +224,16 @@
             <p class="mt-6">Dopo l'installazione, riprova ad aprire il link magnet.</p>
         </div>
     </div>
-    <div id="historyModal" class="modal">
-        <div class="modal-content text-white">
-            <span class="close text-3xl font-bold cursor-pointer float-right">&times;</span>
-            <h2 class="text-2xl font-bold mb-4 flex items-center">
-                <i class="material-icons mr-2">history</i>Cronologia Download
-            </h2>
-            <div id="historyList" class="history-list">
-                <!-- La cronologia verrà popolata dinamicamente qui -->
+    <footer class="bg-black bg-opacity-50 py-6 mt-10">
+        <div class="container mx-auto text-center">
+            <p class="text-gray-300">Created with ❤️ by @hackerandolo</p>
+            <div class="social-links mt-4">
+                <a href="https://t.me/your_telegram_channel" target="_blank" class="mx-2">
+                    <i class="material-icons">telegram</i> Seguici su Telegram
+                </a>
             </div>
         </div>
-    </div>
+    </footer>
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
@@ -257,8 +262,6 @@
             }
         });
 
-        let downloadHistory = JSON.parse(localStorage.getItem('downloadHistory')) || [];
-
         document.getElementById('downloadButton').addEventListener('click', function () {
             var magnetLink = document.getElementById('magnetLink').value;
             var status = document.getElementById('status');
@@ -272,17 +275,63 @@
             }
             var opened = window.open(magnetLink, '_blank');
             if (!opened || opened.closed || typeof opened.closed == 'undefined') {
-                showModal('torrentModal');
+                showModal();
             } else {
                 status.textContent = 'Il link magnet è stato inviato al client torrent.';
-                addToHistory(magnetLink);
             }
         });
 
-        function addToHistory(link) {
-            downloadHistory.unshift({ link: link, date: new Date().toLocaleString() });
-            if (downloadHistory.length > 10) downloadHistory.pop();
-            localStorage.setItem('downloadHistory', JSON.stringify(downloadHistory));
+        function showModal() {
+            var modal = document.getElementById('torrentModal');
+            modal.style.display = "block";
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
         }
 
-        function showModal(modalId) {
+        function closeModal() {
+            var modal = document.getElementById('torrentModal');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = "none";
+            }, 300);
+        }
+
+        document.getElementsByClassName("close")[0].onclick = closeModal;
+
+        window.onclick = function(event) {
+            var modal = document.getElementById('torrentModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
+        const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
+        const torusKnot = new THREE.Mesh(geometry, material);
+        scene.add(torusKnot);
+
+        camera.position.z = 30;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            torusKnot.rotation.x += 0.01;
+            torusKnot.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', function() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
