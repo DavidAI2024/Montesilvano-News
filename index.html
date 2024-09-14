@@ -174,7 +174,7 @@
     <section class="container mx-auto py-20 px-6">
         <div class="glass max-w-md mx-auto text-center p-10 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
             <h1 class="text-3xl font-bold mb-6 animate-pulse">
-                <i class="material-icons mr-2 align-middle">cloud_download</i>Scarica Magnet Link 📂
+                <i class="material-icons mr-2 align-middle">cloud_download</i>🍔 Scarica Magnet Link
             </h1>
             <div class="mt-5 relative">
                 <i class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">link</i>
@@ -193,7 +193,7 @@
                 <h2 class="text-xl font-bold mb-2 text-blue-600">🚀 Novità sul Progetto!</h2>
                 <p class="text-gray-700">🌟 Questo progetto è attualmente in fase Alpha e siamo alla versione <strong>0.1.0</strong>. Siamo entusiasti di condividere con voi che stiamo lavorando a numerosi miglioramenti per offrirvi un'esperienza sempre migliore. 💡</p>
                 <p class="text-gray-700 mt-2">Per rimanere aggiornati sulle ultime novità e sui futuri aggiornamenti, seguiteci sul nostro <a href="https://t.me/archiviouragano" target="_blank" class="text-blue-500 hover:text-blue-700 transition duration-300 font-bold">canale Telegram</a>. 🚀</p>
-                <p class="text-gray-600 italic mt-4">Grazie per il vostro supporto e per essere parte di questa avventura! @hackerandolo</p>
+                <p class="text-gray-600 italic mt-4">Grazie per il vostro supporto e per essere parte di questa avventura!</p>
             </div> 
             <div class="card">
                 <i class="material-icons text-5xl text-blue-400 mb-4">computer</i>
@@ -269,21 +269,21 @@
         });
 
         document.getElementById('downloadButton').addEventListener('click', function () {
-            var magnetLink = document.getElementById('magnetLink').value;
+            var link = document.getElementById('magnetLink').value;
             var status = document.getElementById('status');
-            if (magnetLink.trim() === '') {
-                status.textContent = 'Inserisci un link magnet valido.';
+            if (link.trim() === '') {
+                status.textContent = 'Inserisci un link torrent valido.';
                 return;
             }
-            if (!magnetLink.startsWith('magnet:')) {
+            if (!link.startsWith('magnet:') && !link.startsWith('https:')) {
                 status.textContent = 'Il link inserito non è valido.';
                 return;
             }
-            var opened = window.open(magnetLink, '_blank');
+            var opened = window.open(link, '_blank');
             if (!opened || opened.closed || typeof opened.closed == 'undefined') {
                 showModal();
             } else {
-                status.textContent = 'Il link magnet è stato inviato al client torrent.';
+                status.textContent = 'Il link torrent è stato inviato al client torrent.';
             }
         });
 
