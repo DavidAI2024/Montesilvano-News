@@ -139,6 +139,23 @@
             height: 100%;
             z-index: -1;
         }
+        .creator-info {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        .creator-info:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -147,6 +164,7 @@
     <nav class="navbar fixed top-0 w-full z-50">
         <ul class="flex justify-around py-4">
             <li><a href="#" class="text-white hover:text-purple-300 transition duration-300"><i class="material-icons align-middle mr-1">home</i> X-Dor</a></li>
+            <li><a href="https://t.me/your_telegram_channel" target="_blank" class="text-white hover:text-purple-300 transition duration-300"><i class="material-icons align-middle mr-1">send</i> Canale Telegram</a></li>
         </ul>
     </nav>
     <section class="container mx-auto py-20 px-6">
@@ -174,7 +192,7 @@
             <div class="card">
                 <i class="material-icons text-5xl text-green-400 mb-4">thumb_up</i>
                 <h2 class="text-xl font-bold mb-2">Client Consigliati</h2>
-                <p class="text-gray-300">Raccomandiamo l'utilizzo di client torrent come uTorrent per desktop o Fluid dal Play Store per dispositivi Android.</p>
+                <p class="text-gray-300">Raccomandiamo l'utilizzo di client torrent come uTorrent per desktop o Flud dal Play Store per dispositivi Android.</p>
             </div>
             <div class="card">
                 <i class="material-icons text-5xl text-yellow-400 mb-4">warning</i>
@@ -185,6 +203,10 @@
     </section>
     <div class="floating-btn">
         <span class="material-icons text-white">add</span>
+    </div>
+    <div class="creator-info">
+        <i class="material-icons mr-2 text-purple-400">code</i>
+        <span>Created by <a href="https://t.me/hackerandolo" target="_blank" class="text-purple-300 hover:text-purple-500 transition duration-300">@hackerandolo</a></span>
     </div>
     <div id="torrentModal" class="modal">
         <div class="modal-content text-white">
@@ -276,29 +298,4 @@
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
-
-        const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
-        const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
-        const torusKnot = new THREE.Mesh(geometry, material);
-        scene.add(torusKnot);
-
-        camera.position.z = 30;
-
-        function animate() {
-            requestAnimationFrame(animate);
-            torusKnot.rotation.x += 0.01;
-            torusKnot.rotation.y += 0.01;
-            renderer.render(scene, camera);
-        }
-        animate();
-
-        window.addEventListener('resize', function() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-    </script>
-</body>
-</html>
+        renderer.setSize(window.innerWidth,
