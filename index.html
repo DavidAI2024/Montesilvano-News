@@ -269,21 +269,21 @@
         });
 
         document.getElementById('downloadButton').addEventListener('click', function () {
-            var link = document.getElementById('magnetLink').value;
+            var magnetLink = document.getElementById('magnetLink').value;
             var status = document.getElementById('status');
-            if (link.trim() === '') {
-                status.textContent = 'Inserisci un link torrent valido.';
+            if (magnetLink.trim() === '') {
+                status.textContent = 'Inserisci un link magnet o torrent valido.';
                 return;
             }
-            if (!link.startsWith('magnet:') && !link.startsWith('https:')) {
+            if (!magnetLink.startsWith('magnet:') && !magnetLink.startsWith('https:') && !magnetLink.startsWith('http:')) {
                 status.textContent = 'Il link inserito non è valido.';
                 return;
             }
-            var opened = window.open(link, '_blank');
+            var opened = window.open(magnetLink, '_blank');
             if (!opened || opened.closed || typeof opened.closed == 'undefined') {
                 showModal();
             } else {
-                status.textContent = 'Il link torrent è stato inviato al client torrent.';
+                status.textContent = 'Il link magnet è stato inviato al client torrent.';
             }
         });
 
