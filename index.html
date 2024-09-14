@@ -3,440 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestione Promemoria</title>
+    <title>Advanced Material Design Magnet Downloader</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+
     <style>
-        :root {
-            --primary-color: #007BFF;
-            --background-color: #f4f4f4;
-            --text-color: #333;
-            --border-color: #ddd;
-            --button-bg: #007BFF;
-            --button-hover-bg: #0056b3;
-        }
-        
-        .dark-mode {
-            --primary-color: #333;
-            --background-color: #222;
-            --text-color: #f4f4f4;
-            --border-color: #555;
-            --button-bg: #333;
-            --button-hover-bg: #444;
-        }
-        
+        /* Background Animation */
         body {
-            font-family: Arial, sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
-        }
-        
-        #sidebar {
-            width: 100%;
-            background-color: var(--primary-color);
-            color: #fff;
-            position: fixed;
-            top: 0;
-            left: 0;
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            animation: backgroundShift 10s infinite alternate ease-in-out;
+            overflow-x: hidden;
             height: 100%;
-            padding: 20px;
-            transition: transform 0.3s ease;
-            z-index: 1000;
         }
-        
-        #sidebar.hidden {
-            transform: translateY(-100%);
+
+        @keyframes backgroundShift {
+            0% { background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); }
+            50% { background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%); }
+            100% { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); }
         }
-        
-        #sidebar h1 {
-            font-size: 24px;
-            margin: 0;
+
+        /* Glass Effect Container */
+        .glass {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(8.5px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
         }
-        
-        #sidebar ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+
+        /* Parallax Effect */
+        .parallax {
+            background-image: url('https://source.unsplash.com/1600x900/?nature,water');
+            height: 50vh;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+            z-index: -1;
         }
-        
-        #sidebar ul li {
-            margin: 15px 0;
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         }
-        
-        #sidebar ul li a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 18px;
-            display: block;
-        }
-        
-        #sidebar ul li a:hover {
-            text-decoration: underline;
-        }
-        
-        #sidebar-toggle {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background-color: var(--primary-color);
-            color: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 18px;
-            transition: background-color 0.3s;
-            z-index: 1001;
-        }
-        
-        #sidebar-toggle:hover {
-            background-color: var(--button-hover-bg);
-        }
-        
-        #container {
-            margin-top: 100px; /* Space for the sidebar */
-            padding: 20px;
-            width: 100%;
-        }
-        
-        .container {
-            background-color: var(--background-color);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            max-width: 100%;
-            box-sizing: border-box;
-        }
-        
-        .input-group {
-            margin-bottom: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0 10px 0;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-        }
-        
-        button {
-            padding: 10px 20px;
-            background-color: var(--button-bg);
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-        
-        button:hover {
-            background-color: var(--button-hover-bg);
-        }
-        
-        .reminder-item {
-            background: var(--background-color);
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .reminder-item.completed {
-            text-decoration: line-through;
-            background: #e0ffe0;
-        }
-        
-        .reminder-item button {
-            background: #dc3545;
-        }
-        
-        .reminder-item button:hover {
-            background: #c82333;
-        }
-        
-        .search-bar {
-            margin-bottom: 15px;
-        }
-        
-        .theme-picker, .color-picker {
+
+        .navbar ul {
             display: flex;
             justify-content: space-around;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+            padding: 15px;
+            list-style: none;
         }
-        
-        .theme-option, .color-option {
-            width: 40px;
-            height: 40px;
+
+        .navbar ul li a {
+            color: #fff;
+            font-size: 16px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .navbar ul li a:hover {
+            color: #ffeb3b;
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            @apply bg-blue-500 text-white font-bold py-2 px-4 rounded-full shadow-lg transform transition duration-300 ease-in-out hover:bg-blue-700 hover:scale-105;
+        }
+
+        /* Floating buttons */
+        .floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #f50057;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            border: 2px solid transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             cursor: pointer;
-            margin: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .floating-btn:hover {
+            background-color: #d5004f;
+            transform: scale(1.05);
+        }
+
+        .floating-btn .material-icons {
+            color: white;
+            font-size: 30px;
         }
         
-        .theme-option.selected, .color-option.selected {
-            border: 2px solid #000;
+        /* GSAP animated sections */
+        .gsap-section {
+            opacity: 0;
         }
-        
-        @media (max-width: 768px) {
-            #sidebar {
-                width: 100%;
-                padding: 15px;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            }
-            
-            #sidebar.hidden {
-                transform: translateY(-100%);
-            }
-            
-            #container {
-                margin-top: 100px; /* Adjust margin for the fixed sidebar */
-            }
+
+        /* Advanced Cards */
+        .card {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
 <body>
-    <div id="sidebar">
-        <div id="sidebar-toggle" onclick="toggleSidebar()">☰</div>
-        <h1>Menu</h1>
+
+    <!-- Navbar -->
+    <nav class="navbar fixed top-0 w-full">
         <ul>
-            <li><a href="#" onclick="showSection('add-reminder-container')">Aggiungi Promemoria</a></li>
-            <li><a href="#" onclick="showSection('view-reminders-container')">Visualizza Promemoria</a></li>
-            <li><a href="#" onclick="showSection('settings-container')">Impostazioni</a></li>
-            <li><a href="#" onclick="showSection('themes-container')">Temi</a></li>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Features</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">Contact</a></li>
         </ul>
-    </div>
-    <div id="container">
-        <div id="add-reminder-container" class="container active">
-            <h2>Aggiungi un Nuovo Promemoria</h2>
-            <div class="input-group">
-                <label for="reminder-text">Promemoria:</label>
-                <input type="text" id="reminder-text" placeholder="Inserisci il tuo promemoria">
-            </div>
-            <div class="input-group">
-                <label for="reminder-date">Data e Ora:</label>
-                <input type="datetime-local" id="reminder-date">
-            </div>
-            <div class="input-group">
-                <label for="reminder-icon">Icona:</label>
-                <select id="reminder-icon">
-                    <option value="📝">📝 Nota</option>
-                    <option value="🎉">🎉 Celebrazione</option>
-                    <option value="🏋️">🏋️ Esercizio</option>
-                    <option value="🍽️">🍽️ Pasto</option>
-                    <option value="💼">💼 Lavoro</option>
-                    <option value="🎁">🎁 Regalo</option>
-                </select>
-            </div>
-            <button onclick="addReminder()">Aggiungi Promemoria</button>
-        </div>
+    </nav>
 
-        <div id="view-reminders-container" class="container">
-            <h2>Visualizza Promemoria</h2>
-            <div class="search-bar">
-                <input type="text" id="search-reminder" placeholder="Cerca promemoria" onkeyup="filterReminders()">
-            </div>
-            <div id="reminders-list"></div>
-        </div>
+    <!-- Parallax Section -->
+    <div class="parallax"></div>
 
-        <div id="settings-container" class="container">
-            <h2>Impostazioni</h2>
-            <div class="input-group">
-                <label for="show-reminders">Visualizza Promemoria:</label>
-                <input type="checkbox" id="show-reminders" checked onchange="toggleShowReminders()">
+    <!-- Content Section -->
+    <section class="container mx-auto py-10 px-6 gsap-section">
+        <div class="glass max-w-md mx-auto text-center p-10 rounded-lg shadow-lg">
+            <h1 class="text-2xl text-gray-800 font-bold animate__animated animate__fadeInDown">Download Magnet Link</h1>
+            <div class="mt-5">
+                <input id="magnetLink" type="text" class="w-full p-3 text-center rounded-md focus:ring-4 focus:ring-blue-200" placeholder="Inserisci magnet link">
             </div>
-            <div class="input-group">
-                <label for="create-reminders">Crea Promemoria:</label>
-                <input type="checkbox" id="create-reminders" checked onchange="toggleCreateReminders()">
-            </div>
+            <button id="downloadButton" class="btn-primary mt-5">Download Magnet Link</button>
+            <p id="status" class="mt-3 text-gray-600"></p>
         </div>
+    </section>
 
-        <div id="themes-container" class="container">
-            <h2>Temi</h2>
-            <div class="theme-picker">
-                <div class="theme-option" style="background-color: #ffffff;" onclick="setTheme('#ffffff', '#f4f4f4', '#333')"></div>
-                <div class="theme-option" style="background-color: #000000;" onclick="setTheme('#000000', '#333333', '#f4f4f4')"></div>
-                <div class="theme-option" style="background-color: #B3FFB3;" onclick="setTheme('#B3FFB3', '#E6FFE6', '#333')"></div>
-                <div class="theme-option" style="background-color: #D9D9D9;" onclick="setTheme('#D9D9D9', '#F4F4F4', '#333')"></div>
+    <!-- Card Section -->
+    <section class="container mx-auto py-10 px-6 gsap-section">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="card">
+                <h2 class="text-lg font-bold">Feature 1</h2>
+                <p class="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
             </div>
-            <button onclick="toggleDarkMode()">Passa a Modalità Scura</button>
+            <div class="card">
+                <h2 class="text-lg font-bold">Feature 2</h2>
+                <p class="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+            <div class="card">
+                <h2 class="text-lg font-bold">Feature 3</h2>
+                <p class="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
         </div>
+    </section>
+
+    <!-- Floating Button -->
+    <div class="floating-btn">
+        <span class="material-icons">add</span>
     </div>
 
+    <!-- GSAP Animations -->
     <script>
-        let selectedColor = '#f4f4f4';
+        document.getElementById('downloadButton').addEventListener('click', function () {
+            var magnetLink = document.getElementById('magnetLink').value;
+            var status = document.getElementById('status');
 
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            if (sidebar.classList.contains('hidden')) {
-                sidebar.classList.remove('hidden');
-            } else {
-                sidebar.classList.add('hidden');
-            }
-        }
-
-        function showSection(sectionId) {
-            const sections = document.querySelectorAll('#container > .container');
-            sections.forEach(section => {
-                section.classList.remove('active');
-            });
-            document.getElementById(sectionId).classList.add('active');
-        }
-
-        function setTheme(primaryColor, backgroundColor, textColor) {
-            document.documentElement.style.setProperty('--primary-color', primaryColor);
-            document.documentElement.style.setProperty('--background-color', backgroundColor);
-            document.documentElement.style.setProperty('--text-color', textColor);
-        }
-
-        function setColor(color) {
-            selectedColor = color;
-            document.body.style.backgroundColor = color;
-        }
-
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-        }
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js').then(reg => {
-                console.log('Service Worker registrato con successo:', reg);
-                return reg.pushManager.getSubscription();
-            }).then(subscription => {
-                if (subscription === null) {
-                    console.log('Non sei iscritto alle notifiche.');
-                } else {
-                    console.log('Sei già iscritto alle notifiche:', subscription);
-                }
-            }).catch(error => {
-                console.error('Registrazione del Service Worker fallita:', error);
-            });
-        }
-
-        const reminders = JSON.parse(localStorage.getItem('reminders')) || [];
-
-        function renderReminders() {
-            const remindersList = document.getElementById('reminders-list');
-            remindersList.innerHTML = '';
-            reminders.forEach(reminder => {
-                const reminderItem = document.createElement('div');
-                reminderItem.className = `reminder-item ${reminder.completed ? 'completed' : ''}`;
-                reminderItem.innerHTML = `
-                    <div class="text">${reminder.icon} ${reminder.text} <span>(${new Date(reminder.date).toLocaleString()})</span></div>
-                    <button onclick="toggleComplete(${reminder.id})">Completa</button>
-                    <button onclick="deleteReminder(${reminder.id})">Elimina</button>
-                `;
-                remindersList.appendChild(reminderItem);
-            });
-        }
-
-        function addReminder() {
-            const text = document.getElementById('reminder-text').value;
-            const date = document.getElementById('reminder-date').value;
-            const icon = document.getElementById('reminder-icon').value;
-
-            if (!text || !date) {
-                alert('Per favore, compila tutti i campi');
+            if (magnetLink.trim() === '') {
+                status.textContent = 'Inserisci un link magnet valido.';
                 return;
             }
 
-            const reminder = {
-                id: Date.now(),
-                text,
-                date: new Date(date).toISOString(),
-                icon,
-                completed: false
-            };
-
-            reminders.push(reminder);
-            localStorage.setItem('reminders', JSON.stringify(reminders));
-            renderReminders();
-
-            const reminderDate = new Date(date);
-            const now = new Date();
-            const timeUntilReminder = reminderDate - now;
-
-            if (timeUntilReminder > 0) {
-                setTimeout(() => {
-                    sendNotification(reminder);
-                }, timeUntilReminder);
+            if (!magnetLink.startsWith('magnet:')) {
+                status.textContent = 'Il link inserito non è valido.';
+                return;
             }
-        }
 
-        function sendNotification(reminder) {
-            if (Notification.permission === 'granted') {
-                navigator.serviceWorker.getRegistration().then(reg => {
-                    reg.showNotification(`${reminder.icon} Promemoria`, {
-                        body: reminder.text,
-                        icon: 'path_to_icon.png'
-                    });
-                });
-            }
-        }
+            var anchor = document.createElement('a');
+            anchor.href = magnetLink;
+            anchor.download = 'file.torrent';
+            anchor.click();
 
-        function toggleComplete(id) {
-            const reminder = reminders.find(r => r.id === id);
-            if (reminder) {
-                reminder.completed = !reminder.completed;
-                localStorage.setItem('reminders', JSON.stringify(reminders));
-                renderReminders();
-            }
-        }
+            status.textContent = 'Il link magnet è stato inviato al client.';
+        });
 
-        function deleteReminder(id) {
-            const index = reminders.findIndex(r => r.id === id);
-            if (index !== -1) {
-                reminders.splice(index, 1);
-                localStorage.setItem('reminders', JSON.stringify(reminders));
-                renderReminders();
-            }
-        }
-
-        function filterReminders() {
-            const searchText = document.getElementById('search-reminder').value.toLowerCase();
-            const filteredReminders = reminders.filter(reminder =>
-                reminder.text.toLowerCase().includes(searchText)
-            );
-            const remindersList = document.getElementById('reminders-list');
-            remindersList.innerHTML = '';
-            filteredReminders.forEach(reminder => {
-                const reminderItem = document.createElement('div');
-                reminderItem.className = `reminder-item ${reminder.completed ? 'completed' : ''}`;
-                reminderItem.innerHTML = `
-                    <div class="text">${reminder.icon} ${reminder.text} <span>(${new Date(reminder.date).toLocaleString()})</span></div>
-                    <button onclick="toggleComplete(${reminder.id})">Completa</button>
-                    <button onclick="deleteReminder(${reminder.id})">Elimina</button>
-                `;
-                remindersList.appendChild(reminderItem);
-            });
-        }
-
-        if (Notification.permission !== 'granted') {
-            Notification.requestPermission().then(permission => {
-                if (permission === 'granted') {
-                    console.log('Permesso per le notifiche concesso');
-                } else {
-                    console.log('Permesso per le notifiche negato');
-                }
-            });
-        }
-
-        renderReminders();
+        // GSAP animations
+        gsap.to(".gsap-section", { 
+            opacity: 1, 
+            duration: 1.5, 
+            stagger: 0.5 
+        });
     </script>
 </body>
 </html>
