@@ -52,24 +52,6 @@
         .btn-primary {
             @apply bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition duration-300 ease-in-out hover:from-pink-500 hover:to-purple-500 hover:scale-105 flex items-center justify-center;
         }
-        .floating-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: linear-gradient(45deg, #ff00ff, #00ffff);
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .floating-btn:hover {
-            transform: scale(1.1) rotate(180deg);
-        }
         .card {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 20px;
@@ -164,6 +146,9 @@
     <nav class="navbar fixed top-0 w-full z-50">
         <ul class="flex justify-around py-4">
             <li><a href="#" class="text-white hover:text-purple-300 transition duration-300"><i class="material-icons align-middle mr-1">home</i> X-Dor</a></li>
+            <li><a href="#" class="text-white hover:text-purple-300 transition duration-300"><i class="material-icons align-middle mr-1">history</i> Cronologia</a></li>
+            <li><a href="#" class="text-white hover:text-purple-300 transition duration-300"><i class="material-icons align-middle mr-1">folder</i> Libreria</a></li>
+            <li><a href="#" class="text-white hover:text-purple-300 transition duration-300"><i class="material-icons align-middle mr-1">settings</i> Impostazioni</a></li>
             <li><a href="https://t.me/your_telegram_channel" target="_blank" class="text-white hover:text-purple-300 transition duration-300"><i class="material-icons align-middle mr-1">send</i> Canale Telegram</a></li>
         </ul>
     </nav>
@@ -201,9 +186,6 @@
             </div>
         </div>
     </section>
-    <div class="floating-btn">
-        <span class="material-icons text-white">add</span>
-    </div>
     <div class="creator-info">
         <i class="material-icons mr-2 text-purple-400">code</i>
         <span>Created by <a href="https://t.me/hackerandolo" target="_blank" class="text-purple-300 hover:text-purple-500 transition duration-300">@hackerandolo</a></span>
@@ -298,4 +280,8 @@
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true });
-        renderer.setSize(window.innerWidth,
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
+        const material = new THREE.MeshBas
