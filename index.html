@@ -138,6 +138,28 @@
             transform: translateY(-5px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
+        .history-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+        }
+        .history-content {
+            background: rgba(255, 255, 255, 0.1);
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            width: 80%;
+            max-width: 600px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(8px);
+        }
     </style>
 </head>
 <body>
@@ -146,10 +168,8 @@
     <nav class="navbar fixed top-0 w-full z-50">
         <ul class="flex justify-around py-4">
             <li><a href="#" class="text-white hover:text-purple-300 transition duration-300"><i class="material-icons align-middle mr-1">home</i> X-Dor</a></li>
-            <li><a href="#" class="text-white hover:text-purple-300 transition duration-300"><i class="material-icons align-middle mr-1">history</i> Cronologia</a></li>
-            <li><a href="#" class="text-white hover:text-purple-300 transition duration-300"><i class="material-icons align-middle mr-1">folder</i> Libreria</a></li>
-            <li><a href="#" class="text-white hover:text-purple-300 transition duration-300"><i class="material-icons align-middle mr-1">settings</i> Impostazioni</a></li>
             <li><a href="https://t.me/your_telegram_channel" target="_blank" class="text-white hover:text-purple-300 transition duration-300"><i class="material-icons align-middle mr-1">send</i> Canale Telegram</a></li>
+            <li><a href="#" id="historyButton" class="text-white hover:text-purple-300 transition duration-300"><i class="material-icons align-middle mr-1">history</i> Cronologia</a></li>
         </ul>
     </nav>
     <section class="container mx-auto py-20 px-6">
@@ -161,6 +181,7 @@
                 <i class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">link</i>
                 <input id="magnetLink" type="text" class="w-full p-3 pl-10 text-center rounded-md bg-black bg-opacity-50 focus:ring-4 focus:ring-purple-500 text-white" placeholder="Inserisci magnet link">
             </div>
+            <input id="magnetName" type="text" class="w-full mt-3 p-3 text-center rounded-md bg-black bg-opacity-50 focus:ring-4 focus:ring-purple-500 text-white" placeholder="Nome del magnet (opzionale)">
             <button id="downloadButton" class="btn-primary mt-5">
                 <i class="material-icons mr-2">file_download</i>Download
             </button>
@@ -205,6 +226,16 @@
             <p class="mt-6">Dopo l'installazione, riprova ad aprire il link magnet.</p>
         </div>
     </div>
+    <div id="historyModal" class="history-modal">
+        <div class="history-content text-white">
+            <span class="close text-3xl font-bold cursor-pointer float-right">&times;</span>
+            <h2 class="text-2xl font-bold mb-4 flex items-center">
+                <i class="material-icons mr-2">history</i>Cronologia Download
+            </h2>
+            <ul id="historyList" class="list-disc list-inside mt-4 space-y-2">
+            </ul>
+        </div>
+    </div>
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
@@ -233,55 +264,14 @@
             }
         });
 
+        let downloadHistory = JSON.parse(localStorage.getItem('downloadHistory')) || [];
+
         document.getElementById('downloadButton').addEventListener('click', function () {
             var magnetLink = document.getElementById('magnetLink').value;
+            var magnetName = document.getElementById('magnetName').value || 'Unnamed Magnet';
             var status = document.getElementById('status');
             if (magnetLink.trim() === '') {
                 status.textContent = 'Inserisci un link magnet valido.';
                 return;
             }
-            if (!magnetLink.startsWith('magnet:')) {
-                status.textContent = 'Il link inserito non è valido.';
-                return;
-            }
-            var opened = window.open(magnetLink, '_blank');
-            if (!opened || opened.closed || typeof opened.closed == 'undefined') {
-                showModal();
-            } else {
-                status.textContent = 'Il link magnet è stato inviato al client torrent.';
-            }
-        });
-
-        function showModal() {
-            var modal = document.getElementById('torrentModal');
-            modal.style.display = "block";
-            setTimeout(() => {
-                modal.classList.add('show');
-            }, 10);
-        }
-
-        function closeModal() {
-            var modal = document.getElementById('torrentModal');
-            modal.classList.remove('show');
-            setTimeout(() => {
-                modal.style.display = "none";
-            }, 300);
-        }
-
-        document.getElementsByClassName("close")[0].onclick = closeModal;
-
-        window.onclick = function(event) {
-            var modal = document.getElementById('torrentModal');
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
-
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
-
-        const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
-        const material = new THREE.MeshBas
+            if (!magnetLink.startsWith('magnet:'))
