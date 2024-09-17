@@ -13,7 +13,8 @@
             background-color: #f4f4f4;
         }
         .container {
-            width: 80%;
+            width: 90%;
+            max-width: 1200px;
             margin: auto;
             overflow: hidden;
             padding: 20px;
@@ -21,44 +22,30 @@
         header {
             background: #50b3a2;
             color: white;
-            padding-top: 30px;
-            min-height: 70px;
-            border-bottom: #e8491d 3px solid;
+            padding: 1rem;
+            text-align: center;
         }
-        header a {
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        nav ul {
+            padding: 0;
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        nav li {
+            margin: 0.5rem;
+        }
+        nav a {
             color: #ffffff;
             text-decoration: none;
             text-transform: uppercase;
-            font-size: 16px;
-        }
-        header ul {
-            padding: 0;
-            margin: 0;
-            list-style: none;
-            overflow: hidden;
-        }
-        header li {
-            float: left;
-            display: inline;
-            padding: 0 20px 0 20px;
-        }
-        header #branding {
-            float: left;
-        }
-        header #branding h1 {
-            margin: 0;
-        }
-        header nav {
-            float: right;
-            margin-top: 10px;
-        }
-        header .highlight, header .current a {
-            color: #e8491d;
-            font-weight: bold;
-        }
-        header a:hover {
-            color: #ffffff;
-            font-weight: bold;
+            font-size: 0.9rem;
+            padding: 0.5rem;
+            display: block;
         }
         .main-content {
             padding: 20px;
@@ -83,6 +70,7 @@
             margin-bottom: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            box-sizing: border-box;
         }
         button {
             background: #50b3a2;
@@ -92,6 +80,7 @@
             border-radius: 4px;
             cursor: pointer;
             transition: background 0.3s ease;
+            width: 100%;
         }
         button:hover {
             background: #3a8279;
@@ -125,14 +114,56 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                padding: 10px;
+            }
+            header h1 {
+                font-size: 1.2rem;
+            }
+            nav ul {
+                flex-direction: column;
+            }
+            nav li {
+                margin: 0.2rem 0;
+            }
+            .main-content {
+                padding: 10px;
+            }
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            tr {
+                border: 1px solid #ccc;
+                margin-bottom: 10px;
+            }
+            td {
+                border: none;
+                position: relative;
+                padding-left: 50%;
+            }
+            td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 6px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                font-weight: bold;
+            }
+        }
     </style>
 </head>
 <body>
     <header>
         <div class="container">
-            <div id="branding">
-                <h1><span class="highlight">Pasticceria</span> Manager</h1>
-            </div>
+            <h1><span class="highlight">Pasticceria</span> Manager</h1>
             <nav>
                 <ul>
                     <li><a href="#" onclick="mostraSezione('lotti')">Lotti</a></li>
@@ -290,11 +321,13 @@
                 </tr>`;
             lotti.forEach(lotto => {
                 const row = table.insertRow();
-                row.insertCell(0).textContent = lotto.id;
-                row.insertCell(1).textContent = lotto.prodotto;
-                row.insertCell(2).textContent = lotto.dataProduzione;
-                row.insertCell(3).textContent = lotto.dataScadenza;
-                row.insertCell(4).textContent = lotto.quantita;
+                row.innerHTML = `
+                    <td data-label="ID Lotto">${lotto.id}</td>
+                    <td data-label="Prodotto">${lotto.prodotto}</td>
+                    <td data-label="Data Produzione">${lotto.dataProduzione}</td>
+                    <td data-label="Data Scadenza">${lotto.dataScadenza}</td>
+                    <td data-label="Quantità">${lotto.quantita}</td>
+                `;
             });
         }
 
@@ -438,11 +471,13 @@
                 </tr>`;
             magazzino.forEach(ingrediente => {
                 const row = table.insertRow();
-                row.insertCell(0).textContent = ingrediente.nome;
-                row.insertCell(1).textContent = ingrediente.quantita;
-                row.insertCell(2).textContent = ingrediente.scadenza;
-                row.insertCell(3).textContent = ingrediente.quantitaMinima;
-                row.insertCell(4).textContent = ingrediente.prezzo;
+                row.innerHTML = `
+                    <td data-label="Ingrediente">${ingrediente.nome}</td>
+                    <td data-label="Quantità (g)">${ingrediente.quantita}</td>
+                    <td data-label="Scadenza">${ingrediente.scadenza}</td>
+                    <td data-label="Quantità Minima (g)">${ingrediente.quantitaMinima}</td>
+                    <td data-label="Prezzo per kg">${ingrediente.prezzo}</td>
+                `;
             });
         }
 
@@ -502,12 +537,14 @@
                 </tr>`;
             ricette.forEach(ricetta => {
                 const row = table.insertRow();
-                row.insertCell(0).textContent = ricetta.nome;
-                row.insertCell(1).textContent = ricetta.ingredienti.map(ing => `${ing.nome} (${ing.quantita}g)`).join(', ');
-                row.insertCell(2).textContent = ricetta.pesoTotaleEffettivo.toFixed(2);
-                row.insertCell(3).textContent = ricetta.resa.toFixed(2);
                 const costoTotale = calcolaCostoTotaleRicetta(ricetta);
-                row.insertCell(4).textContent = `€${costoTotale.toFixed(2)}`;
+                row.innerHTML = `
+                    <td data-label="Nome Ricetta">${ricetta.nome}</td>
+                    <td data-label="Ingredienti">${ricetta.ingredienti.map(ing => `${ing.nome} (${ing.quantita}g)`).join(', ')}</td>
+                    <td data-label="Peso Totale (g)">${ricetta.pesoTotaleEffettivo.toFixed(2)}</td>
+                    <td data-label="Resa (%)">${ricetta.resa.toFixed(2)}</td>
+                    <td data-label="Costo Totale">€${costoTotale.toFixed(2)}</td>
+                `;
             });
         }
 
