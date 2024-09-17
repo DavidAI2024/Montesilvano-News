@@ -3,367 +3,569 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XdorMule 📂</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <title>Gestione Pasticceria con Foodcost</title>
     <style>
-        body, html {
-            font-family: 'Poppins', sans-serif;
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
-            background: #000;
-            color: #fff;
+            background-color: #f4f4f4;
         }
-        .gradient-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, #ff00ff, #00ffff, #ff00ff);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            opacity: 0.3;
-            z-index: -1;
-        }
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .glass {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-        }
-        .navbar {
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-        }
-        .btn-primary {
-            background-image: linear-gradient(to right, #9f7aea, #ed64a6);
-            color: white;
-            font-weight: bold;
-            padding: 0.75rem 1.5rem;
-            border-radius: 9999px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            transform: translateY(0);
-            transition: all 0.3s ease-in-out;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .btn-primary:hover {
-            background-image: linear-gradient(to right, #ed64a6, #9f7aea);
-            transform: translateY(-2px) scale(1.05);
-        }
-        .floating-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: linear-gradient(45deg, #ff00ff, #00ffff);
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .floating-btn:hover {
-            transform: scale(1.1) rotate(180deg);
-        }
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-            overflow: hidden;
-            position: relative;
-        }
-        .card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: rotate(45deg);
-            transition: all 0.5s ease;
-        }
-        .card:hover::before {
-            left: 150%;
-            transition: all 0.5s ease;
-        }
-        .card:hover {
-            transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.7);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .modal-content {
-            background: rgba(255, 255, 255, 0.1);
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
+        .container {
             width: 80%;
-            max-width: 500px;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            backdrop-filter: blur(8px);
-            transform: scale(0.7);
-            transition: all 0.3s ease;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
         }
-        .modal.show {
-            opacity: 1;
-        }
-        .modal.show .modal-content {
-            transform: scale(1);
-        }
-        #canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-        .social-links a {
+        header {
+            background: #50b3a2;
             color: white;
-            transition: color 0.3s ease;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #e8491d 3px solid;
         }
-        .social-links a:hover {
-            color: #a78bfa;
+        header a {
+            color: #ffffff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        header ul {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            overflow: hidden;
+        }
+        header li {
+            float: left;
+            display: inline;
+            padding: 0 20px 0 20px;
+        }
+        header #branding {
+            float: left;
+        }
+        header #branding h1 {
+            margin: 0;
+        }
+        header nav {
+            float: right;
+            margin-top: 10px;
+        }
+        header .highlight, header .current a {
+            color: #e8491d;
+            font-weight: bold;
+        }
+        header a:hover {
+            color: #ffffff;
+            font-weight: bold;
+        }
+        .main-content {
+            padding: 20px;
+            background: white;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        form {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        input[type="text"], input[type="number"], input[type="date"], select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background: #50b3a2;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #3a8279;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #50b3a2;
+            color: white;
+        }
+        .notification {
+            padding: 10px;
+            background-color: #f44336;
+            color: white;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
 <body>
-    <div class="gradient-bg"></div>
-    <div id="canvas-container"></div>
-    <nav class="navbar fixed top-0 w-full z-50">
-        <ul class="flex justify-around items-center py-4">
-            <li><a href="#" class="text-white hover:text-purple-300 transition duration-300"><i class="material-icons align-middle mr-1">home</i> X-Dor</a></li>
-            <li><a href="https://t.me/archiviouragano" target="_blank" class="text-white hover:text-purple-300 transition duration-300"><i class="material-icons align-middle mr-1">send</i> Canale Telegram</a></li>
-        </ul>
-    </nav>
-    <section class="container mx-auto py-20 px-6">
-        <div class="glass max-w-md mx-auto text-center p-10 rounded-lg shadow-lg transform hover:scale-105 transition duration-300">
-            <h1 class="text-3xl font-bold mb-6 animate-pulse">
-                <i class="material-icons mr-2 align-middle">cloud_download</i>X-DorMule 🫏
-            </h1>
-            <div class="mt-5 relative">
-                <i class="material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">link</i>
-                <input id="magnetLink" type="text" class="w-full p-3 pl-10 text-center rounded-md bg-black bg-opacity-50 focus:ring-4 focus:ring-purple-500 text-white" placeholder="Inserisci magnet link">
+    <header>
+        <div class="container">
+            <div id="branding">
+                <h1><span class="highlight">Pasticceria</span> Manager</h1>
             </div>
-            <button id="downloadButton" class="btn-primary mt-5">
-                <i class="material-icons mr-2">file_download</i>Download
-            </button>
-            <p id="status" class="mt-3 text-gray-300"></p>
+            <nav>
+                <ul>
+                    <li><a href="#" onclick="mostraSezione('lotti')">Lotti</a></li>
+                    <li><a href="#" onclick="mostraSezione('etichette')">Etichette</a></li>
+                    <li><a href="#" onclick="mostraSezione('magazzino')">Magazzino</a></li>
+                    <li><a href="#" onclick="mostraSezione('ricette')">Ricette</a></li>
+                    <li><a href="#" onclick="mostraSezione('foodcost')">Foodcost</a></li>
+                </ul>
+            </nav>
         </div>
-    </section>
-    <section class="container mx-auto py-10 px-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="card mt-6 border-4 border-blue-500 bg-blue-100 shadow-xl rounded-lg p-6">
-                <i class="material-icons text-5xl text-blue-500 mb-4 animate-bounce">info</i>
-                <h2 class="text-xl font-bold mb-2 text-blue-600">🚀 Novità sul Progetto!</h2>
-                <p class="text-gray-700">🌟 Questo progetto è attualmente in fase Alpha e siamo alla versione <strong>0.1.0</strong>. Siamo entusiasti di condividere con voi che stiamo lavorando a numerosi miglioramenti per offrirvi un'esperienza sempre migliore. 💡</p>
-                <p class="text-gray-700 mt-2">Per rimanere aggiornati sulle ultime novità e sui futuri aggiornamenti, seguiteci sul nostro <a href="https://t.me/archiviouragano" target="_blank" class="text-blue-500 hover:text-blue-700 transition duration-300 font-bold">canale Telegram</a>. 🚀</p>
-                <p class="text-gray-600 italic mt-4">Grazie per il vostro supporto e per essere parte di questa avventura!</p>
-            </div> 
-            <div class="card mt-6 border-4 border-blue-500 bg-blue-100 shadow-lg rounded-lg p-6">
-                <i class="material-icons text-5xl text-blue-500 mb-4">cloud_download</i>
-                <h2 class="text-xl font-bold mb-2 text-blue-600">🔗 Requisito Client Torrent</h2>
-                <p class="text-gray-700">Per scaricare questo <strong>magnet link</strong>, è necessario avere un <strong>client torrent</strong> installato sul tuo dispositivo. Se non ne hai uno, assicurati di scaricarne uno per poter procedere con il download!</p>
-                <p class="text-gray-600 italic mt-4">In caso di dubbi o problemi, non esitare a contattarci per assistenza. Buon download! 🌟</p>
-            </div>
-            
-            <div class="card border-4 border-green-500 bg-green-50 shadow-lg rounded-lg p-6">
-                <i class="material-icons text-5xl text-green-500 mb-4">star_rate</i>
-                <h2 class="text-xl font-bold mb-2 text-green-600">✨ Client Consigliati</h2>
-                <p class="text-gray-800">
-                    Per un'esperienza di download ottimale, ti consigliamo di utilizzare i seguenti client torrent:
-                    <ul class="list-disc list-inside mt-2 text-gray-800">
-                        <li><a href="https://play.google.com/store/apps/details?id=com.delphicoder.flud" target="_blank" class="text-blue-500 hover:text-blue-700 transition duration-300">Flud</a> per dispositivi Android.</li>
-                        <li><a href="https://www.utorrent.com/downloads/complete/track/stable/os/win" target="_blank" class="text-blue-500 hover:text-blue-700 transition duration-300">uTorrent</a> per desktop.</li>
-                    </ul>
-                </p>
-            </div>
-            
-            
-            <div class="card mt-6 border-4 border-purple-500 bg-purple-100 shadow-lg rounded-lg p-6">
-                <i class="material-icons text-5xl text-purple-500 mb-4 animate-pulse">info</i>
-                <h2 class="text-xl font-bold mb-2 text-purple-600">📥 Come Gestire i Link Magnet e i File .torrent</h2>
-                <p class="text-gray-700">✨ Quando inserite un <strong>link magnet</strong>, il vostro downloader torrent predefinito si aprirà automaticamente e inizierà il download. Assicuratevi che sia configurato correttamente sul vostro dispositivo! 📥</p>
-                <p class="text-gray-700 mt-2">🔹 Se invece incollate un <strong>file .torrent</strong>, verrà scaricato sul vostro dispositivo e vi verrà chiesto di aprirlo con il torrent downloader di vostra scelta. Scegliete il programma che preferite per gestire il download! 🚀</p>
-                <p class="text-gray-600 italic mt-4">Per qualsiasi domanda o assistenza, non esitate a contattarci. Buon download! 🎉</p>
-            </div>
-                      
-            <div class="card border-4 border-red-500 bg-red-50 shadow-lg rounded-lg p-6">
-                <i class="material-icons text-5xl text-red-500 mb-4 animate-bounce">warning</i>
-                <h2 class="text-xl font-bold mb-2 text-red-600">⚠️ Attenzione</h2>
-                <p class="text-gray-800">
-                    Assicurati di avere un client torrent installato prima di procedere con il download del magnet link.
-                </p>
-            </div>
-            
-        </div>
-    </section>
-    <div id="floatingBtn" class="floating-btn">
-        <span class="material-icons text-white">add</span>
+    </header>
+
+    <div class="container">
+        <div id="notification" class="notification"></div>
+        
+        <section id="lotti" class="main-content">
+            <h2>Generatore di Lotti</h2>
+            <form id="lottoForm">
+                <input type="text" id="prodotto" placeholder="Nome Prodotto" required>
+                <input type="date" id="dataProduzione" required>
+                <input type="date" id="dataScadenza" required>
+                <input type="number" id="quantita" placeholder="Quantità" required>
+                <button type="submit">Genera Lotto</button>
+            </form>
+            <table id="lottiTable">
+                <tr>
+                    <th>ID Lotto</th>
+                    <th>Prodotto</th>
+                    <th>Data Produzione</th>
+                    <th>Data Scadenza</th>
+                    <th>Quantità</th>
+                </tr>
+            </table>
+        </section>
+
+        <section id="etichette" class="main-content" style="display:none;">
+            <h2>Generatore di Etichette</h2>
+            <form id="etichettaForm">
+                <select id="lottoSelect">
+                    <option value="">Seleziona un lotto</option>
+                </select>
+                <textarea id="ingredienti" placeholder="Ingredienti" rows="4"></textarea>
+                <textarea id="allergeni" placeholder="Allergeni" rows="2"></textarea>
+                <input type="number" id="quantitaNetta" placeholder="Quantità Netta (g)" required>
+                <input type="number" id="quantitaNettaOz" placeholder="Quantità Netta (oz)" required>
+                <textarea id="condizioniConservazione" placeholder="Condizioni di Conservazione" rows="2"></textarea>
+                <input type="text" id="produttore" placeholder="Nome e Indirizzo del Produttore" required>
+                <input type="text" id="paeseOrigine" placeholder="Paese di Origine" required>
+                <textarea id="dichiarazioneNutrizionale" placeholder="Dichiarazione Nutrizionale (per 100g)" rows="6"></textarea>
+                <input type="text" id="logoUrl" placeholder="URL del logo (opzionale)">
+                <button type="submit">Genera Etichetta PDF</button>
+            </form>
+            <div id="etichettaPreview" style="border: 1px solid #ddd; padding: 20px; margin-top: 20px;"></div>
+        </section>
+
+        <section id="magazzino" class="main-content" style="display:none;">
+            <h2>Gestione Magazzino</h2>
+            <form id="magazzinoForm">
+                <input type="text" id="ingrediente" placeholder="Nome Ingrediente" required>
+                <input type="number" id="quantitaIngrediente" placeholder="Quantità (g)" required>
+                <input type="date" id="scadenzaIngrediente" required>
+                <input type="number" id="quantitaMinima" placeholder="Quantità Minima (g)" required>
+                <input type="number" id="prezzoIngrediente" placeholder="Prezzo per kg" required>
+                <button type="submit">Aggiungi/Aggiorna Ingrediente</button>
+            </form>
+            <table id="magazzinoTable">
+                <tr>
+                    <th>Ingrediente</th>
+                    <th>Quantità (g)</th>
+                    <th>Scadenza</th>
+                    <th>Quantità Minima (g)</th>
+                    <th>Prezzo per kg</th>
+                </tr>
+            </table>
+        </section>
+
+        <section id="ricette" class="main-content" style="display:none;">
+            <h2>Gestione Ricette</h2>
+            <form id="ricettaForm">
+                <input type="text" id="nomeRicetta" placeholder="Nome Ricetta" required>
+                <div id="ingredientiRicetta"></div>
+                <button type="button" onclick="aggiungiIngredienteRicetta()">Aggiungi Ingrediente</button>
+                <input type="number" id="pesoTotaleAtteso" placeholder="Peso totale atteso (g)" required>
+                <input type="number" id="costoManodopera" placeholder="Costo manodopera" required>
+                <input type="number" id="costoPackaging" placeholder="Costo packaging" required>
+                <input type="number" id="altriCosti" placeholder="Altri costi" required>
+                <button type="submit">Salva Ricetta</button>
+            </form>
+            <table id="ricetteTable">
+                <tr>
+                    <th>Nome Ricetta</th>
+                    <th>Ingredienti</th>
+                    <th>Peso Totale (g)</th>
+                    <th>Resa (%)</th>
+                    <th>Costo Totale</th>
+                </tr>
+            </table>
+        </section>
+
+        <section id="foodcost" class="main-content" style="display:none;">
+            <h2>Calcolo Foodcost</h2>
+            <form id="foodcostForm">
+                <select id="ricettaSelect">
+                    <option value="">Seleziona una ricetta</option>
+                </select>
+                <input type="number" id="percentualeInvenduto" placeholder="Percentuale invenduto (%)" required>
+                <input type="number" id="percentualeProfitto" placeholder="Percentuale profitto desiderato (%)" required>
+                <button type="submit">Calcola Foodcost</button>
+            </form>
+            <div id="foodcostResult"></div>
+        </section>
     </div>
-    <div id="torrentModal" class="modal">
-        <div class="modal-content text-white">
-            <span class="close text-3xl font-bold cursor-pointer float-right">&times;</span>
-            <h2 class="text-2xl font-bold mb-4 flex items-center">
-                <i class="material-icons mr-2">get_app</i>Installa un Client Torrent
-            </h2>
-            <p>Per aprire questo link magnet, hai bisogno di un client torrent. Ecco alcune opzioni popolari:</p>
-            <ul class="list-disc list-inside mt-4 space-y-2">
-                <li><a href="https://www.qbittorrent.org/download.php" target="_blank" class="text-blue-300 hover:text-blue-500 transition duration-300 flex items-center"><i class="material-icons mr-1">download</i>qBittorrent</a></li>
-                <li><a href="https://www.transmissionbt.com/download/" target="_blank" class="text-blue-300 hover:text-blue-500 transition duration-300 flex items-center"><i class="material-icons mr-1">download</i>Transmission</a></li>
-                <li><a href="https://www.utorrent.com/downloads/complete/track/stable/os/win" target="_blank" class="text-blue-300 hover:text-blue-500 transition duration-300 flex items-center"><i class="material-icons mr-1">download</i>uTorrent</a></li>
-            </ul>
-            <p class="mt-6">Dopo l'installazione, riprova ad aprire il link magnet.</p>
-        </div>
-    </div>
-    <footer class="bg-black bg-opacity-50 py-6 mt-10">
-        <div class="container mx-auto text-center">
-            <p id="createdBy" class="text-gray-300 hidden">Created with ❤️ by @hackrandolo</p>
-            <div class="social-links mt-4">
-                <a href="https://t.me/archiviouragano" target="_blank" class="mx-2">
-                    <i class="material-icons">telegram</i> Seguici su Telegram
-                </a>
-            </div>
-        </div>
-    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.5/JsBarcode.all.min.js"></script>
     <script>
-        gsap.registerPlugin(ScrollTrigger);
+        let lotti = [];
+        let magazzino = [];
+        let ricette = [];
 
-        gsap.from(".glass", {
-            opacity: 0,
-            y: 100,
-            duration: 1,
-            scrollTrigger: {
-                trigger: ".glass",
-                start: "top 80%",
-                end: "top 20%",
-                scrub: 1
-            }
-        });
+        function generaIdLotto() {
+            return 'L' + Date.now();
+        }
 
-        gsap.from(".card", {
-            opacity: 0,
-            y: 50,
-            stagger: 0.2,
-            duration: 1,
-            scrollTrigger: {
-                trigger: ".card",
-                start: "top 80%",
-                end: "top 20%",
-                scrub: 1
-            }
-        });
+        function mostraSezione(sezione) {
+            document.querySelectorAll('.main-content').forEach(section => section.style.display = 'none');
+            document.getElementById(sezione).style.display = 'block';
+        }
 
-        document.getElementById('downloadButton').addEventListener('click', function () {
-            var magnetLink = document.getElementById('magnetLink').value;
-            var status = document.getElementById('status');
-            if (magnetLink.trim() === '') {
-                status.textContent = 'Inserisci un link magnet o torrent valido.';
-                return;
+        function aggiungiLotto(event) {
+            event.preventDefault();
+            const lotto = {
+                id: generaIdLotto(),
+                prodotto: document.getElementById('prodotto').value,
+                dataProduzione: document.getElementById('dataProduzione').value,
+                dataScadenza: document.getElementById('dataScadenza').value,
+                quantita: parseFloat(document.getElementById('quantita').value)
+            };
+            lotti.push(lotto);
+            aggiornaTabellaLotti();
+            aggiornaSelettoreLotti();
+            mostraNotifica('Lotto aggiunto con successo!', 'success');
+            document.getElementById('lottoForm').reset();
+        }
+
+        function aggiornaTabellaLotti() {
+            const table = document.getElementById('lottiTable');
+            table.innerHTML = `
+                <tr>
+                    <th>ID Lotto</th>
+                    <th>Prodotto</th>
+                    <th>Data Produzione</th>
+                    <th>Data Scadenza</th>
+                    <th>Quantità</th>
+                </tr>`;
+            lotti.forEach(lotto => {
+                const row = table.insertRow();
+                row.insertCell(0).textContent = lotto.id;
+                row.insertCell(1).textContent = lotto.prodotto;
+                row.insertCell(2).textContent = lotto.dataProduzione;
+                row.insertCell(3).textContent = lotto.dataScadenza;
+                row.insertCell(4).textContent = lotto.quantita;
+            });
+        }
+
+        function aggiornaSelettoreLotti() {
+            const select = document.getElementById('lottoSelect');
+            select.innerHTML = '<option value="">Seleziona un lotto</option>';
+            lotti.forEach(lotto => {
+                const option = document.createElement('option');
+                option.value = lotto.id;
+                option.textContent = `${lotto.prodotto} - ${lotto.id}`;
+                select.appendChild(option);
+            });
+        }
+
+        function generaEtichetta(event) {
+            event.preventDefault();
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({
+                orientation: 'landscape',
+                unit: 'mm',
+                format: [100, 150]
+            });
+
+            const lottoId = document.getElementById('lottoSelect').value;
+            const lotto = lotti.find(l => l.id === lottoId);
+            const ingredienti = document.getElementById('ingredienti').value;
+            const allergeni = document.getElementById('allergeni').value;
+            const quantitaNetta = document.getElementById('quantitaNetta').value;
+            const quantitaNettaOz = document.getElementById('quantitaNettaOz').value;
+            const condizioniConservazione = document.getElementById('condizioniConservazione').value;
+            const produttore = document.getElementById('produttore').value;
+            const paeseOrigine = document.getElementById('paeseOrigine').value;
+            const dichiarazioneNutrizionale = document.getElementById('dichiarazioneNutrizionale').value;
+            const logoUrl = document.getElementById('logoUrl').value;
+
+            doc.setFillColor(255, 255, 255);
+            doc.rect(0, 0, 150, 100, 'F');
+
+            doc.setDrawColor(0);
+            doc.setLineWidth(0.5);
+            doc.rect(5, 5, 140, 90);
+
+            if (logoUrl) {
+                doc.addImage(logoUrl, 'JPEG', 10, 10, 20, 20);
             }
-            if (!magnetLink.startsWith('magnet:') && !magnetLink.startsWith('https:') && !magnetLink.startsWith('http:')) {
-                status.textContent = 'Il link inserito non è valido.';
-                return;
-            }
-            var opened = window.open(magnetLink, '_blank');
-            if (!opened || opened.closed || typeof opened.closed == 'undefined') {
-                showModal();
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(16);
+            doc.text(`${lotto.prodotto}`, 75, 15, { align: 'center' });
+
+            doc.setFontSize(14);
+            doc.text(`${quantitaNetta}g / ${quantitaNettaOz}oz`, 75, 22, { align: 'center' });
+
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'normal');
+            let yPos = 30;
+            doc.text(`Ingredienti: ${ingredienti}`, 10, yPos);
+            yPos += 10;
+            doc.text(`Allergeni: ${allergeni}`, 10, yPos);
+            yPos += 5;
+            doc.text(`Da consumarsi preferibilmente entro il: ${lotto.dataScadenza}`, 10, yPos);
+            yPos += 5;
+            doc.text(`Condizioni di Conservazione: ${condizioniConservazione}`, 10, yPos);
+            yPos += 5;
+            doc.text(`Prodotto e confezionato da: ${produttore}`, 10, yPos);
+            yPos += 5;
+            doc.text(`Paese di Origine: ${paeseOrigine}`, 10, yPos);
+
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'bold');
+            doc.text("Valori nutrizionali medi per 100g:", 80, 30);
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(8);
+            const nutrizioneLinee = dichiarazioneNutrizionale.split('\n');
+            let yPosNutrizione = 35;
+            nutrizioneLinee.forEach(linea => {
+                doc.text(linea, 80, yPosNutrizione);
+                yPosNutrizione += 4;
+            });
+
+            const canvas = document.createElement('canvas');
+            JsBarcode(canvas, lotto.id, {
+                format: "CODE128",
+                width: 2,
+                height: 30,
+                displayValue: false
+            });
+            const imgData = canvas.toDataURL("image/png");
+            doc.addImage(imgData, 'PNG', 10, 70, 50, 20);
+
+            doc.setFontSize(8);
+            doc.text(`Lotto: ${lotto.id}`, 10, 95);
+            doc.text(`Data di produzione: ${lotto.dataProduzione}`, 50, 95);
+
+            doc.setFontSize(12);
+            doc.text("♻", 130, 90);
+            doc.text("🌱", 135, 90);
+            doc.text("📦", 140, 90);
+
+            doc.save(`${lotto.prodotto}_etichetta.pdf`);
+            mostraNotifica('Etichetta generata con successo!', 'success');
+        }
+
+        function mostraNotifica(messaggio, tipo) {
+            const notification = document.getElementById('notification');
+            notification.textContent = messaggio;
+            notification.className = `notification ${tipo} fade-in`;
+            notification.style.display = 'block';
+            setTimeout(() => notification.style.display = 'none', 3000);
+        }
+
+        function aggiungiIngredienteMagazzino(event) {
+            event.preventDefault();
+            const ingrediente = {
+                nome: document.getElementById('ingrediente').value,
+                quantita: parseFloat(document.getElementById('quantitaIngrediente').value),
+                scadenza: document.getElementById('scadenzaIngrediente').value,
+                quantitaMinima: parseFloat(document.getElementById('quantitaMinima').value),
+                prezzo: parseFloat(document.getElementById('prezzoIngrediente').value)
+            };
+            const index = magazzino.findIndex(item => item.nome === ingrediente.nome);
+            if (index !== -1) {
+                magazzino[index] = ingrediente;
             } else {
-                status.textContent = 'Il link magnet è stato inviato al client torrent.';
+                magazzino.push(ingrediente);
             }
-        });
-
-        function showModal() {
-            var modal = document.getElementById('torrentModal');
-            modal.style.display = "block";
-            setTimeout(() => {
-                modal.classList.add('show');
-            }, 10);
+            aggiornaTabellaIngrediente();
+            mostraNotifica('Ingrediente aggiunto/aggiornato con successo!', 'success');
+            document.getElementById('magazzinoForm').reset();
         }
 
-        function closeModal() {
-            var modal = document.getElementById('torrentModal');
-            modal.classList.remove('show');
-            setTimeout(() => {
-                modal.style.display = "none";
-            }, 300);
+        function aggiornaTabellaIngrediente() {
+            const table = document.getElementById('magazzinoTable');
+            table.innerHTML = `
+                <tr>
+                    <th>Ingrediente</th>
+                    <th>Quantità (g)</th>
+                    <th>Scadenza</th>
+                    <th>Quantità Minima (g)</th>
+                    <th>Prezzo per kg</th>
+                </tr>`;
+            magazzino.forEach(ingrediente => {
+                const row = table.insertRow();
+                row.insertCell(0).textContent = ingrediente.nome;
+                row.insertCell(1).textContent = ingrediente.quantita;
+                row.insertCell(2).textContent = ingrediente.scadenza;
+                row.insertCell(3).textContent = ingrediente.quantitaMinima;
+                row.insertCell(4).textContent = ingrediente.prezzo;
+            });
         }
 
-        document.getElementsByClassName("close")[0].onclick = closeModal;
+        function aggiungiIngredienteRicetta() {
+            const container = document.getElementById('ingredientiRicetta');
+            const div = document.createElement('div');
+            div.innerHTML = `
+                <select class="ingredienteSelect">
+                    <option value="">Seleziona un ingrediente</option>
+                    ${magazzino.map(ing => `<option value="${ing.nome}">${ing.nome}</option>`).join('')}
+                </select>
+                <input type="number" class="quantitaIngredienteRicetta" placeholder="Quantità (g)" required>
+            `;
+            container.appendChild(div);
+        }
 
-        window.onclick = function(event) {
-            var modal = document.getElementById('torrentModal');
-            if (event.target == modal) {
-                closeModal();
+        function salvaRicetta(event) {
+            event.preventDefault();
+            const nomeRicetta = document.getElementById('nomeRicetta').value;
+            const ingredienti = Array.from(document.querySelectorAll('#ingredientiRicetta > div')).map(div => ({
+                nome: div.querySelector('.ingredienteSelect').value,
+                quantita: parseFloat(div.querySelector('.quantitaIngredienteRicetta').value)
+            }));
+            const pesoTotaleAtteso = parseFloat(document.getElementById('pesoTotaleAtteso').value);
+            const pesoTotaleEffettivo = ingredienti.reduce((total, ing) => total + ing.quantita, 0);
+            const resa = (pesoTotaleEffettivo / pesoTotaleAtteso) * 100;
+            const percentualeScarto = 100 - resa;
+
+            const ricetta = {
+                nome: nomeRicetta,
+                ingredienti: ingredienti,
+                pesoTotaleAtteso: pesoTotaleAtteso,
+                pesoTotaleEffettivo: pesoTotaleEffettivo,
+                resa: resa,
+                percentualeScarto: percentualeScarto,
+                costoManodopera: parseFloat(document.getElementById('costoManodopera').value),
+                costoPackaging: parseFloat(document.getElementById('costoPackaging').value),
+                altriCosti: parseFloat(document.getElementById('altriCosti').value)
+            };
+            ricette.push(ricetta);
+            aggiornaTabellaRicette();
+            aggiornaSelettoreRicette();
+            mostraNotifica('Ricetta salvata con successo!', 'success');
+            document.getElementById('ricettaForm').reset();
+            document.getElementById('ingredientiRicetta').innerHTML = '';
+        }
+
+        function aggiornaTabellaRicette() {
+            const table = document.getElementById('ricetteTable');
+            table.innerHTML = `
+                <tr>
+                    <th>Nome Ricetta</th>
+                    <th>Ingredienti</th>
+                    <th>Peso Totale (g)</th>
+                    <th>Resa (%)</th>
+                    <th>Costo Totale</th>
+                </tr>`;
+            ricette.forEach(ricetta => {
+                const row = table.insertRow();
+                row.insertCell(0).textContent = ricetta.nome;
+                row.insertCell(1).textContent = ricetta.ingredienti.map(ing => `${ing.nome} (${ing.quantita}g)`).join(', ');
+                row.insertCell(2).textContent = ricetta.pesoTotaleEffettivo.toFixed(2);
+                row.insertCell(3).textContent = ricetta.resa.toFixed(2);
+                const costoTotale = calcolaCostoTotaleRicetta(ricetta);
+                row.insertCell(4).textContent = `€${costoTotale.toFixed(2)}`;
+            });
+        }
+
+        function aggiornaSelettoreRicette() {
+            const select = document.getElementById('ricettaSelect');
+            select.innerHTML = '<option value="">Seleziona una ricetta</option>';
+            ricette.forEach(ricetta => {
+                const option = document.createElement('option');
+                option.value = ricetta.nome;
+                option.textContent = ricetta.nome;
+                select.appendChild(option);
+            });
+        }
+
+        function calcolaCostoTotaleRicetta(ricetta) {
+            const costoIngredienti = ricetta.ingredienti.reduce((total, ing) => {
+                const ingredienteMagazzino = magazzino.find(i => i.nome === ing.nome);
+                const costoIngrediente = ingredienteMagazzino ? (ingredienteMagazzino.prezzo / 1000) * ing.quantita : 0;
+                return total + costoIngrediente;
+            }, 0);
+            return costoIngredienti + ricetta.costoManodopera + ricetta.costoPackaging + ricetta.altriCosti;
+        }
+
+        function calcolaFoodcost(event) {
+            event.preventDefault();
+            const nomeRicetta = document.getElementById('ricettaSelect').value;
+            const ricetta = ricette.find(r => r.nome === nomeRicetta);
+            if (!ricetta) {
+                mostraNotifica('Seleziona una ricetta valida', 'error');
+                return;
             }
+            const percentualeInvenduto = parseFloat(document.getElementById('percentualeInvenduto').value) / 100;
+            const percentualeProfitto = parseFloat(document.getElementById('percentualeProfitto').value) / 100;
+
+            const costoTotale = calcolaCostoTotaleRicetta(ricetta);
+            const costoPerGrammo = costoTotale / ricetta.pesoTotaleEffettivo;
+            const costoConScarto = costoPerGrammo / (ricetta.resa / 100);
+            const costoConInvenduto = costoConScarto / (1 - percentualeInvenduto);
+            const prezzoVendita = costoConInvenduto / (1 - percentualeProfitto);
+
+            const risultato = document.getElementById('foodcostResult');
+            risultato.innerHTML = `
+                <h3>Risultato Foodcost per ${ricetta.nome}</h3>
+                <p>Costo totale ricetta: €${costoTotale.toFixed(2)}</p>
+                <p>Costo per grammo: €${costoPerGrammo.toFixed(4)}/g</p>
+                <p>Costo considerando lo scarto (${ricetta.percentualeScarto.toFixed(2)}%): €${costoConScarto.toFixed(4)}/g</p>
+                <p>Costo considerando l'invenduto (${(percentualeInvenduto * 100).toFixed(2)}%): €${costoConInvenduto.toFixed(4)}/g</p>
+                <p>Prezzo di vendita consigliato: €${prezzoVendita.toFixed(2)}/g</p>
+                <p>Prezzo di vendita per porzione (100g): €${(prezzoVendita * 100).toFixed(2)}</p>
+                <p>Margine di profitto: €${(prezzoVendita - costoConInvenduto).toFixed(4)}/g</p>
+            `;
         }
 
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
-
-        const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
-        const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true });
-        const torusKnot = new THREE.Mesh(geometry, material);
-        scene.add(torusKnot);
-
-        camera.position.z = 30;
-
-        function animate() {
-            requestAnimationFrame(animate);
-            torusKnot.rotation.x += 0.01;
-            torusKnot.rotation.y += 0.01;
-            renderer.render(scene, camera);
-        }
-        animate();
-
-        window.addEventListener('resize', function() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        document.getElementById('floatingBtn').addEventListener('click', function() {
-            var createdBy = document.getElementById('createdBy');
-            createdBy.classList.toggle('hidden');
-        });
+        document.getElementById('lottoForm').addEventListener('submit', aggiungiLotto);
+        document.getElementById('etichettaForm').addEventListener('submit', generaEtichetta);
+        document.getElementById('magazzinoForm').addEventListener('submit', aggiungiIngredienteMagazzino);
+        document.getElementById('ricettaForm').addEventListener('submit', salvaRicetta);
+        document.getElementById('foodcostForm').addEventListener('submit', calcolaFoodcost);
     </script>
 </body>
 </html>
